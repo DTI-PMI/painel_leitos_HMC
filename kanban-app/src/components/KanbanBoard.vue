@@ -95,7 +95,7 @@
                         <span>{{ card.DataAdmissao }}</span>
                     </div>
                     <div class="card-row texto-grande table-cell">
-                        <span>{{ card.HoraAdmissao }}</span>
+                        <span>{{ card.HoraAdmissao.slice(0, -3) }}</span>
                     </div>
                     <div class="card-row texto-grande table-cell">
                         <span>{{ card.Nome ? (card.Nome + (card.Idade ? ", " + card.Idade : "")) : "" }}</span>
