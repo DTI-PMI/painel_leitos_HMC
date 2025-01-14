@@ -75,7 +75,7 @@ async def get_kanban_data(
             categoria = "INFANTIL" if "P" in leito_original else ("MASCULINO" if "M" in leito_original else "FEMININO" if "F" in leito_original else "")
             
             # Formatar valor do leito
-            leito_formatado = f"Leito {leito_original[1:].replace('_','').capitalize()}" if leito_original else "Leito Não informado"
+            #leito_formatado = f"Leito {leito_original[1:].replace('_','').capitalize()}" if leito_original else "Leito Não informado"
             
             card = {
                 "Nome": row.get("Nome do Paciente", ""),
@@ -84,7 +84,7 @@ async def get_kanban_data(
                 "DataAdmissao": row.get("Data de admissão", "Não informado"),
                 # "Sexo": row.get("Sexo", "Não informado"),
                 "Hipotese": row.get("Hipótese Diagnóstica", "Não informado"),
-                "Leito": leito_formatado,
+                "Leito": row.get("Leito", "Leito Não informado"),
                 "Pendencia": row.get("Pendências", "Nenhuma"),
                 "TotalHoras": row.get("Tempo de Perm.", "0"),
                 "NecessarioAIH": row.get("Necessário fazer AIH?", "Não"),
