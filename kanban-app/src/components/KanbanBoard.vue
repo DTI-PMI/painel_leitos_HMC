@@ -31,7 +31,8 @@
                             <span><strong>{{ card.Leito }}</strong></span>
                         </div>
                         <div class="card-row texto-grande">
-                            <span>{{ card.Nome ? (nomeAbreviado(card.Nome) + (card.Idade ? ", " + card.Idade : "")) : "" }}</span>
+                            <span>{{ card.Nome ? (nomeAbreviado(card.Nome) + (card.Idade ? ", " + card.Idade : "")) : ""
+                                }}</span>
                         </div>
                         <div class="card-row texto-grande">
                             <span><strong>Admissão:</strong> {{ card.DataAdmissao + ", " +
@@ -73,13 +74,13 @@
                     <div class="card-row texto-grande table-cell table-cell-header" style="width:100px">
                         <span><strong>Hr.Admi</strong></span>
                     </div>
-                    <div class="card-row texto-grande table-cell table-cell-header">
+                    <div class="card-row texto-grande table-cell table-cell-header" style="width:220px">
                         <span><strong>Paciente</strong></span>
                     </div>
-                    <div class="card-row texto_medio table-cell table-cell-header">
-                        <span><strong>Hipótese</strong></span>
+                    <div class="card-row texto_medio table-cell table-cell-header" style="width:400px">
+                        <span><strong>H. Diagnóstica</strong></span>
                     </div>
-                    <div class="card-row texto_medio table-cell table-cell-header">
+                    <div class="card-row texto_medio table-cell table-cell-header" style="width:450px">
                         <span><strong>Pendência</strong></span>
                     </div>
                     <div class="card-row texto-grande table-cell table-cell-header" style="width:60px">
@@ -98,7 +99,8 @@
                         <span>{{ card.HoraAdmissao.slice(0, -3) }}</span>
                     </div>
                     <div class="card-row texto-grande table-cell">
-                        <span>{{ card.Nome ? (nomeAbreviado(card.Nome) + (card.Idade ? ", " + card.Idade : "")) : "" }}</span>
+                        <span>{{ card.Nome ? (nomeAbreviado(card.Nome) + (card.Idade ? ", " + card.Idade : "")) : ""
+                            }}</span>
                     </div>
                     <div class="card-row texto-grande table-cell">
                         <span><strong>{{ card.Hipotese || "" }}</strong></span>
@@ -221,12 +223,12 @@ export default {
         nomeAbreviado(nome) {
             var split = nome.split(" ")
             var result = ""
-            split.forEach(function(value, index){
-                if (index == 0) result += value.slice(0,1).toUpperCase() + value.slice(1)
-                else result += value.slice(0,1).toUpperCase() + "."
+            split.forEach(function (value, index) {
+                if (index == 0) result += value.slice(0, 1).toUpperCase() + value.slice(1)
+                else result += value.slice(0, 1).toUpperCase() + "."
                 result += " "
             })
-            return result.slice(0,-1)
+            return result.slice(0, -1)
         }
     },
     async mounted() {
@@ -274,7 +276,6 @@ export default {
 }
 
 .table-category {
-    min-width:2033px;
     display: flex;
     flex-direction: row;
     align-items: flex-start;
