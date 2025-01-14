@@ -28,14 +28,19 @@
                     :class="{ highlight_yellow: card.TotalHoras >= 20 && card.TotalHoras < 24, highlight_red: card.TotalHoras >= 24, highlight_green: card.AIHFeita === 'Sim' }">
                     <div v-if="card.Nome">
                         <div class="card-row texto-grande">
+                            <span><strong>{{ card.Leito }}</strong></span>
+                        </div>
+                        <div class="card-row texto-grande">
                             <span>{{ card.Nome ? (card.Nome + (card.Idade ? ", " + card.Idade : "")) : "" }}</span>
+                        </div>
+                        <div class="card-row texto-grande">
+                            <span><strong>Admissão:</strong> {{ card.DataAdmissao + ", " +
+                                card.HoraAdmissao.slice(0, -3) }}</span>
                         </div>
                         <div class="card-row texto-grande">
                             <span><strong>Horas Totais:</strong> {{ card.TotalHoras || "0" }}</span>
                         </div>
-                        <div class="card-row texto-grande">
-                            <span><strong>{{ card.Leito }}</strong></span>
-                        </div>
+
                         <div class="card-row texto_medio">
                             <span><strong>{{ card.Hipotese ? "HD:" : "" }}</strong> {{ card.Hipotese }}</span>
                         </div>
@@ -55,9 +60,32 @@
     </div>
 
     <div class="table-category" v-for="(cards, category) in sortedKanbanData" :key="category" v-if="tableView">
-        <div class="category-header table-header">
-            <div :class="['table-title', 'table-cell', categoryClass(category)]">{{ category }}</div>
+        <div class="category-header">
+            <div :class="['table-title', categoryClass(category)]">{{ category }}</div>
             <div class="kanban-cards table-view">
+                <div class="kanban-card table-row table-header-row">
+                    <div class="card-row texto-grande table-cell table-cell-header">
+                        <span><strong>Leito</strong></span>
+                    </div>
+                    <div class="card-row texto-grande table-cell table-cell-header">
+                        <span><strong>Dt.Admi</strong></span>
+                    </div>
+                    <div class="card-row texto-grande table-cell table-cell-header">
+                        <span><strong>Hr.Admi</strong></span>
+                    </div>
+                    <div class="card-row texto-grande table-cell table-cell-header">
+                        <span><strong>Nome</strong></span>
+                    </div>
+                    <div class="card-row texto_medio table-cell table-cell-header">
+                        <span><strong>Hipótese</strong></span>
+                    </div>
+                    <div class="card-row texto_medio table-cell table-cell-header">
+                        <span><strong>Pendência</strong></span>
+                    </div>
+                    <div class="card-row texto-grande table-cell table-cell-header">
+                        <span><strong>Hrs</strong></span>
+                    </div>
+                </div>
                 <div class="kanban-card table-row" v-for="(card, index) in cards" :key="index"
                     :class="{ highlight_yellow: card.TotalHoras >= 20 && card.TotalHoras < 24, highlight_red: card.TotalHoras >= 24, highlight_green: card.AIHFeita === 'Sim' }">
                     <div class="card-row texto-grande table-cell">
@@ -73,13 +101,13 @@
                         <span>{{ card.Nome ? (card.Nome + (card.Idade ? ", " + card.Idade : "")) : "" }}</span>
                     </div>
                     <div class="card-row texto_medio table-cell">
-                        <span><strong>{{ card.Hipotese ? "HD:" : "" }}</strong> {{ card.Hipotese }}</span>
+                        <span><strong>{{ card.Hipotese || "" }}</strong></span>
                     </div>
                     <div class="card-row texto_medio table-cell">
-                        <span><strong>{{ card.Pendencia ? "Pendência:" : "" }}</strong> {{ card.Pendencia }}</span>
+                        <span><strong>{{ card.Pendencia || "" }}</strong></span>
                     </div>
                     <div class="card-row texto-grande table-cell">
-                        <span> {{ card.TotalHoras || "0" }} <strong>Horas</strong></span>
+                        <span> {{ card.TotalHoras || "0" }} </span>
                     </div>
                 </div>
             </div>
@@ -272,6 +300,7 @@ export default {
 }
 
 .table-title {
+    writing-mode: vertical-rl;
     text-align: center;
     padding: 10px 5px;
     border-radius: 8px;
@@ -282,6 +311,8 @@ export default {
     justify-content: center;
     height: auto;
     white-space: nowrap;
+    /* Ensure the title is displayed vertically on the side */
+    margin-right: 10px;
 }
 
 .category-masculino {
@@ -444,11 +475,6 @@ export default {
     border-collapse: collapse;
 }
 
-.table-header {
-    display: table-header-group;
-    background-color: #f2f2f2;
-}
-
 .table-row {
     display: table-row;
 }
@@ -463,5 +489,9 @@ export default {
 .table-cell-header {
     font-weight: bold;
     background-color: #f9f9f9;
+}
+
+.table-header-row {
+    background-color: #f2f2f2;
 }
 </style>
