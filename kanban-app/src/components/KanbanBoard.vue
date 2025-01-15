@@ -86,6 +86,9 @@
                     <div class="card-row texto-grande table-cell table-cell-header" style="width:60px">
                         <span><strong>Hrs</strong></span>
                     </div>
+                    <!-- <div class="card-row texto-grande table-cell table-cell-header" style="width:60px">
+                        <span><strong>Hrs AIH</strong></span>
+                    </div> -->
                 </div>
                 <div class="kanban-card table-row" v-for="(card, index) in cards" :key="index"
                     :class="{ highlight_yellow: card.TotalHoras >= 20 && card.TotalHoras < 24, highlight_red: card.TotalHoras >= 24, highlight_green: card.AIHFeita === 'Sim' }">
@@ -111,6 +114,9 @@
                     <div class="card-row texto-grande table-cell" style="width:60px">
                         <span> {{ card.TotalHoras || "0" }} </span>
                     </div>
+                    <!-- <div class="card-row texto-grande table-cell" style="width:60px">
+                        <span> {{ card.HrsAIH || "0" }}</span>
+                    </div> -->
                 </div>
             </div>
         </div>

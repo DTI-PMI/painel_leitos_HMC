@@ -1,149 +1,139 @@
-# Documentação
+# README - Sistema de Painel de Leitos Hospitalares
 
-![image](https://github.com/user-attachments/assets/a6cdde80-fcf7-4f8d-a3a3-8a48987faa7e)
+## Descrição
 
+Este projeto é uma aplicação que permite que médicos preencham uma planilha no Google Sheets, e as informações sejam automaticamente transpostas para um site dinâmico. O sistema organiza os dados em um painel Kanban, categorizando os pacientes por gênero e faixa etária (masculino, feminino e infantil).
 
-## Sobre o Projeto (Português)
-Essa API foi desenvolvida para manipular e fornecer dados de uma planilha do Google Sheets em um formato adequado para aplicações do tipo Kanban. A estrutura dos dados permite organizar informações por categorias como Masculino, Feminino e Infantil.
-
-### Funcionalidades
-- Extrai dados de uma planilha do Google Sheets.
-- Retorna informações filtradas e formatadas em um formato amigável para aplicações web.
-- Permite adaptações para diferentes planilhas.
+A aplicação foi desenvolvida utilizando **Python** (FastAPI) para o backend e **Vue.js** para o frontend. Este README fornece instruções detalhadas para configurar, instalar e executar o projeto.
 
 ---
 
-## About the Project (English)
-This API was developed to manipulate and provide data from a Google Sheets spreadsheet in a format suitable for Kanban-style applications. The data structure allows organizing information into categories such as Masculino (Male), Feminino (Female), and Infantil (Child).
+## Configuração do Ambiente de Desenvolvimento
 
-### Features
-- Extracts data from a Google Sheets spreadsheet.
-- Returns filtered and formatted information in a web-friendly format.
-- Allows customizations for different spreadsheets.
+### 1. Instalação do Python e Criação de Ambiente Virtual
+
+Certifique-se de que o Python 3.9 ou superior esteja instalado em seu sistema.
+
+1. **Crie o ambiente virtual:**
+   ```bash
+   python -m venv venv
+   ```
+2. **Ative o ambiente virtual:**
+   - **Windows:**
+     ```bash
+     venv\Scripts\activate
+     ```
+   - **macOS/Linux:**
+     ```bash
+     source venv/bin/activate
+     ```
+3. **Atualize o ****`pip`****:**
+   ```bash
+   pip install --upgrade pip
+   ```
+
+### 2. Instale as Dependências do Backend
+
+Execute o comando abaixo para instalar as bibliotecas necessárias:
+
+```bash
+pip install fastapi uvicorn gspread pandas
+```
 
 ---
 
-## Instalação e Uso (Português)
+## Configuração do Frontend (Vue.js)
 
-### Requisitos
-- Python 3.9 ou superior
-- Linux, macOS ou Windows
-- Google Service Account (credenciais JSON)
+### 1. Instalação do Node.js e Vite
 
-### Instalação
-1. Clone o repositório:
+Certifique-se de que o Node.js e o npm estão instalados. Em seguida:
+
+1. **Instale o Vite (opcional):**
    ```bash
-   git clone <URL-do-repositório>
-   cd <nome-do-repositório>
+   npm create vite@latest frontend --template vue
+   ```
+2. **Instale as dependências do projeto Vue:**
+   ```bash
+   cd frontend
+   npm install
+   ```
+3. **Execute o servidor de desenvolvimento do frontend:**
+   ```bash
+   npm run dev
    ```
 
-2. Crie um ambiente virtual (opcional, mas recomendado):
+---
+
+## Configuração do Google Sheets
+
+### 1. Obtenha as Credenciais do Google
+
+1. Acesse o [Google Cloud Console](https://console.cloud.google.com/).
+2. Crie um novo projeto ou selecione um existente.
+3. Ative a API do Google Sheets.
+4. Gere uma conta de serviço e baixe o arquivo `JSON` contendo as credenciais.
+5. Renomeie este arquivo para `credenciais.json` e mova-o para o diretório raiz do backend.
+
+### 2. Configure o ID da Planilha
+
+1. Crie o arquivo `sheet_id.txt` no diretório do backend.
+2. Insira o ID da sua planilha na primeira linha do arquivo.
+3. Insira a senha de acesso na segunda linha do arquivo.
+
+---
+
+## Executando o Backend
+
+1. Ative o ambiente virtual (se não estiver ativo):
    ```bash
-   python3 -m venv venv
-   source venv/bin/activate  # Para Linux/Mac
-   venv\Scripts\activate  # Para Windows
+   source venv/bin/activate
    ```
-
-3. Instale as dependências:
-   ```bash
-   pip install fastapi uvicorn gspread pandas
-   ```
-
-4. Coloque o arquivo `credenciais.json` (chave da sua conta de serviço Google) na raiz do projeto.
-
-### Uso
-1. Execute o servidor:
+2. Execute o servidor FastAPI:
    ```bash
    uvicorn main:app --reload
    ```
 
-2. Acesse a API em seu navegador ou ferramenta como o Postman:
-   - URL padrão: `http://127.0.0.1:8000/kanban-data/`
-
-3. Forneça o ID da sua planilha no parâmetro `sheet_id`.
-
-### Personalização
-Para adaptar a API à sua planilha:
-1. Abra o código e ajuste os cabeçalhos esperados:
-   ```python
-   expected_headers = [
-       "Nome do Paciente", "Idade", "Sexo", "Hipótese Diagnóstica", "Leito", "Pendências",
-       "Total de horas de admissão", "Necessário fazer AIH?"
-   ]
-   ```
-2. Certifique-se de que os cabeçalhos da sua planilha correspondem aos fornecidos.
-3. Modifique as lógicas de categorizacao conforme necessário.
-
-### Uso no Linux
-1. Instale o Python 3 e pip:
-   ```bash
-   sudo apt update
-   sudo apt install python3 python3-pip
-   ```
-2. Siga os passos da seção de Instalação acima.
+O backend será executado em `http://127.0.0.1:8000`.
 
 ---
 
-## Installation and Usage (English)
+## Fluxo de Autenticação e Uso
 
-### Requirements
-- Python 3.9 or higher
-- Linux, macOS, or Windows
-- Google Service Account (JSON credentials)
+### 1. Login
 
-### Installation
-1. Clone the repository:
-   ```bash
-   git clone <repository-url>
-   cd <repository-name>
-   ```
+Acesse a interface web e forneça a senha definida no arquivo `sheet_id.txt`. A autenticação é necessária para acessar os dados da planilha.
 
-2. Create a virtual environment (optional but recommended):
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate  # For Linux/Mac
-   venv\Scripts\activate  # For Windows
-   ```
+### 2. Visualização de Dados
 
-3. Install dependencies:
-   ```bash
-   pip install fastapi uvicorn gspread pandas
-   ```
-
-4. Place the `credentials.json` file (Google Service Account key) in the project root.
-
-### Usage
-1. Run the server:
-   ```bash
-   uvicorn main:app --reload
-   ```
-
-2. Access the API via your browser or a tool like Postman:
-   - Default URL: `http://127.0.0.1:8000/kanban-data/`
-
-3. Provide your spreadsheet ID in the `sheet_id` parameter.
-
-### Customization
-To adapt the API to your spreadsheet:
-1. Open the code and adjust the expected headers:
-   ```python
-   expected_headers = [
-       "Nome do Paciente", "Idade", "Sexo", "Hipótese Diagnóstica", "Leito", "Pendências",
-       "Total de horas de admissão", "Necessário fazer AIH?"
-   ]
-   ```
-2. Ensure your spreadsheet headers match those provided.
-3. Modify the categorization logic as needed.
-
-### Usage on Linux
-1. Install Python 3 and pip:
-   ```bash
-   sudo apt update
-   sudo apt install python3 python3-pip
-   ```
-2. Follow the steps from the Installation section above.
+Os dados da planilha serão organizados em categorias (Masculino, Feminino, Infantil). Você pode alternar entre a visualização Kanban e uma tabela clicando no botão de troca.
 
 ---
 
-## Contato (Contact)
-- Para dúvidas ou sugestões, entre em contato via email: [rafaelpsm@outlook.com.br]
+## Estrutura do Projeto
+
+```
+.
+├── backend/
+│   ├── main.py
+│   ├── credenciais.json
+│   ├── sheet_id.txt
+│   └── ...
+├── frontend/
+│   ├── src/
+│   ├── package.json
+│   └── ...
+└── README.md
+```
+
+---
+
+## Contribuição
+
+Contribuições são bem-vindas! Sinta-se à vontade para criar um fork e enviar um pull request.
+
+---
+
+## Licença
+
+Este projeto está licenciado sob a [MIT License](LICENSE).
+
