@@ -74,7 +74,7 @@
                     <div class="card-row texto-grande table-cell table-cell-header" style="width:100px">
                         <span><strong>Hr.Admi</strong></span>
                     </div>
-                    <div class="card-row texto-grande table-cell table-cell-header" style="width:220px">
+                    <div class="card-row texto-grande table-cell table-cell-header" style="width:225px">
                         <span><strong>Paciente</strong></span>
                     </div>
                     <div class="card-row texto_medio table-cell table-cell-header" style="width:400px">
