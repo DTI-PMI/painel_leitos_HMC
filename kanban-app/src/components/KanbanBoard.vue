@@ -16,6 +16,8 @@
 
     <button @click="tableView = !tableView" class="button_change" v-if="logged && Object.keys(kanbanData).length > 0">
         {{ tableView ? "Ver Cards" : "Ver Tabela" }}</button>
+    <button @click="toggleDarkMode" class="dark_mode_toggle" v-if="logged && Object.keys(kanbanData).length > 0">{{
+        darkMode ? "🌞" : "🌙" }}</button>
 
     <h2 v-if="loading && Object.keys(kanbanData).length === 0" style="color: black">Carregando...</h2>
 
@@ -135,6 +137,7 @@ export default {
             loading: false,
             error: "",
             input_password: "",
+            darkMode: false,
         };
     },
     computed: {
@@ -235,6 +238,10 @@ export default {
                 result += " "
             })
             return result.slice(0, -1)
+        },
+        toggleDarkMode() {
+            this.darkMode = !this.darkMode;
+            document.documentElement.classList.toggle('dark', this.darkMode);
         }
     },
     async mounted() {
@@ -243,15 +250,22 @@ export default {
         }, 60000);
 
     },
+
 };
 </script>
 
 <style scoped>
-#app {
-    background-color: #f7f7f7;
-    padding: 10px;
-    height: 100vh;
-    overflow-x: hidden;
+.dark_mode_toggle {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    padding: 10px 15px;
+    background-color: var(--button-color);
+    color: var(--text-color);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
 }
 
 .button_change {
@@ -269,13 +283,18 @@ export default {
     top: 10px;
 }
 
+.button_change,
+.submit-button {
+    background-color: var(--button-color);
+}
+
 .kanban-category {
     display: flex;
     flex-direction: row;
     align-items: flex-start;
     margin-bottom: 12px;
-    background-color: #fff;
-    border: 1px solid #ddd;
+    background-color: var(--card-background-color);
+    border: 1px solid var(--border-color);
     border-radius: 8px;
     padding: 5px;
     min-height: 26vh;
@@ -286,8 +305,8 @@ export default {
     flex-direction: row;
     align-items: flex-start;
     margin-bottom: 12px;
-    background-color: #fff;
-    border: 1px solid #ddd;
+    background-color: var(--card-background-color);
+    border: 1px solid var(--border-color);
     border-radius: 8px;
     padding: 5px;
     min-height: 26vh;
@@ -326,7 +345,6 @@ export default {
     justify-content: center;
     height: auto;
     white-space: nowrap;
-    /* Ensure the title is displayed vertically on the side */
     margin-right: 10px;
 }
 
@@ -358,7 +376,8 @@ export default {
 }
 
 .kanban-card {
-    background-color: white;
+    background-color: var(--card-background-color);
+    color: var(--text-color);
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 10px;
@@ -367,32 +386,32 @@ export default {
     display: flex;
     flex-direction: column;
     gap: 8px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-color);
 }
 
 .kanban-card.highlight_red {
     border-color: #ff0000;
-    background-color: #ffe6e6;
+    background-color: var(--highlight-red);
 }
 
 .kanban-card.highlight_yellow {
     border-color: #ffee00;
-    background-color: #ffffe6;
+    background-color: var(--highlight-yellow);
 }
 
 .kanban-card.highlight_green {
     border-color: #00ff00;
-    background-color: #e9ffe6;
+    background-color: var(--highlight-green);
 }
 
 .card-row {
     text-align: left;
     font-size: 15.125px;
-    color: #333;
+    color: var(--text-color);
 }
 
 .card-row strong {
-    color: #555;
+    color: var(--text-strong);
 }
 
 .leito_livre {
@@ -501,9 +520,13 @@ export default {
     text-align: left;
 }
 
+.dark .table-cell {
+    border-color: #777;
+}
+
 .table-cell-header {
     font-weight: bold;
-    background-color: #f9f9f9;
+    background-color: var(--background-color);
 }
 
 .table-header-row {
