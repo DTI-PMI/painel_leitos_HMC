@@ -15,7 +15,7 @@
     </div>
 
     <button @click="tableView = !tableView" class="button_change" v-if="logged && Object.keys(kanbanData).length > 0">
-        {{ tableView ? "Ver Cards" : "Ver Tabela" }}</button>
+        {{ tableView ? "Cards" : "Tabela" }}</button>
     <button @click="toggleDarkMode" class="dark_mode_toggle" v-if="logged && Object.keys(kanbanData).length > 0">{{
         darkMode ? "🌞" : "🌙" }}</button>
 
