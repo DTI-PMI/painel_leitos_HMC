@@ -36,6 +36,11 @@
                             <span>{{ card.Nome ? (nomeAbreviado(card.Nome) + (card.Idade ? ", " + card.Idade : "")) : ""
                                 }}</span>
                         </div>
+                        <div class="card-row texto_medio"
+                            v-if="(category === 'FEMININO' && card.Sexo === 'M') || (category === 'MASCULINO' && card.Sexo === 'F')">
+                            <span><strong>Sexo:</strong> {{ card.Sexo }}</span>
+                        </div>
+
                         <div class="card-row texto-grande">
                             <span><strong>Admissão:</strong> {{ card.DataAdmissao + ", " +
                                 card.HoraAdmissao.slice(0, -3) }}</span>
@@ -105,7 +110,10 @@
                     </div>
                     <div class="card-row texto-grande table-cell">
                         <span>{{ card.Nome ? (nomeAbreviado(card.Nome) + (card.Idade ? ", " + card.Idade : "")) : ""
-                            }}</span>
+                            }}</span><span
+                            v-if="(category === 'FEMININO' && card.Sexo === 'M') || (category === 'MASCULINO' && card.Sexo === 'F')">
+                            ({{
+                                card.Sexo }})</span>
                     </div>
                     <div class="card-row texto-grande table-cell">
                         <span><strong>{{ card.Hipotese || "" }}</strong></span>

@@ -77,13 +77,13 @@ async def get_kanban_data(
             
             # Formatar valor do leito
             #leito_formatado = f"Leito {leito_original[1:].replace('_','').capitalize()}" if leito_original else "Leito Não informado"
-            
+        
             card = {
                 "Nome": row.get("Nome do Paciente", ""),
                 "Idade": row.get("Idade", "Não informado"),
                 "HoraAdmissao": row.get("Hora admissão", "Não informado"),
                 "DataAdmissao": row.get("Data de admissão", "Não informado"),
-                # "Sexo": row.get("Sexo", "Não informado"),
+                "Sexo": str(row.get("Sexo", "Não informado")),
                 "Hipotese": row.get("Hipótese Diagnóstica", "Não informado"),
                 "Leito": row.get("Leito", "Leito Não informado"),
                 "Pendencia": row.get("Pendências", "Nenhuma"),

@@ -25,7 +25,7 @@
 
 .dark {
     --background-color: #2c2c2c;
-    --text-color: #eee;
+    --text-color: #fff;
     --card-background-color: #3a3a3a;
     --button-color: #3b82f6;
     --text-strong: #fff;
@@ -35,6 +35,10 @@
     --border-color: #222222;
 
     p {
+        color: var(--text-color);
+    }
+
+    span {
         color: var(--text-color);
     }
 }
