@@ -46,7 +46,9 @@ async def get_kanban_data(
             "Data de admissão", "Hora admissão",
             "Nome do Paciente", "Idade", "Sexo", 
             "Hipótese Diagnóstica", "Leito", "Pendências", 
-            "Tempo de Perm.", "Necessário fazer AIH?", "AIH Feita?", "Hrs. AIH Feita"
+            "Tempo de Perm.", "Necessário fazer AIH?", "AIH Feita?"
+            # "Hrs. AIH Feita"
+            # "Coming soon"
         ]
 
         records = sheet.get_all_records(expected_headers=expected_headers)
@@ -64,8 +66,9 @@ async def get_kanban_data(
             "Pendências", 
             "Tempo de Perm.", 
             "Necessário fazer AIH?",
-            "AIH Feita?",
-            "Hrs. AIH Feita"
+            "AIH Feita?"
+            # "Hrs. AIH Feita"
+            # "Coming soon"
         ]]
 
         kanban_data = {"MASCULINO": [], "FEMININO": [], "INFANTIL": []}
@@ -91,6 +94,7 @@ async def get_kanban_data(
                 "NecessarioAIH": row.get("Necessário fazer AIH?", "Não"),
                 "AIHFeita": row.get("AIH Feita?", "Não")
                 # "HrsAIH": row.get("Hrs. AIH Feita", "0")
+                # "Coming soon"
             }
 
             kanban_data[categoria].append(card)
