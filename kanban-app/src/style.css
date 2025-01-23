@@ -38,16 +38,24 @@
         color: var(--text-color);
     }
 
-    span {
-        color: var(--text-color);
+    ::selection {
+        color: gold;
+        background-color: #000;
     }
+
 }
+
 
 #app {
     background-color: var(--background-color);
     color: var(--text-color);
     padding: 10px;
     overflow-x: hidden;
+}
+
+::selection {
+    color: rgb(0, 200, 255);
+    background-color: #000000;
 }
 
 a {
