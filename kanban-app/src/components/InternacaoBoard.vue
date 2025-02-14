@@ -20,38 +20,40 @@
     <h2 v-if="loading && Object.keys(kanbanData).length === 0" style="color: black">Carregando...</h2>
 
 
-    <div class="kanban-category" v-for="(cards, category) in sortedKanbanData" :key="category" v-if="!tableView">
+    <div class="kanban-category" v-if="!tableView && !loading && logged">
         <div class="category-header">
-            <div :class="['category-title', categoryClass(category)]">{{ category }}</div>
             <div class="kanban-cards">
-                <div class="kanban-card" v-for="(card, index) in cards" :key="index"
+                <div class="kanban-card" v-for="(card, index) in kanbanData" :key="index"
                     :class="{ highlight_yellow: card.TotalHoras >= 20 && card.TotalHoras < 24, highlight_red: card.TotalHoras >= 24, highlight_green: card.AIHFeita === 'Sim' }">
-                    <div v-if="card.Nome">
+                    <div v-if="card.NOME">
                         <div class="card-row texto-grande">
-                            <span><strong>{{ card.Leito }}</strong></span>
+                            <span><strong>{{ card.LEITO }}</strong></span>
                         </div>
                         <div class="card-row texto-grande">
-                            <span>{{ card.Nome ? (nomeAbreviado(card.Nome) + (card.Idade ? ", " + card.Idade : "")) : ""
+                            <span><strong>{{ card.TL }}</strong></span>
+                        </div>
+                        <div class="card-row texto-grande">
+                            <span>{{ card.NOME || "" }}</span>
+                        </div>
+                        <div class="card-row texto-grande">
+                            <span><strong>DI:</strong> {{ card.DI }}</span>
+                        </div>
+                        <div class="card-row texto-grande">
+                            <span>{{ card.ESPEC ? nomeAbreviado(card.ESPEC) : ""
                                 }}</span>
                         </div>
                         <div class="card-row texto-grande">
-                            <span><strong>Admissão:</strong> {{ card.DataAdmissao + ", " +
-                                card.HoraAdmissao.slice(0, -3) }}</span>
-                        </div>
-                        <div class="card-row texto-grande">
-                            <span><strong>Horas Totais:</strong> {{ card.TotalHoras || "0" }}</span>
+                            <span><strong>Banho:</strong> {{ card.BANHO || "" }}</span>
                         </div>
 
                         <div class="card-row texto_medio">
-                            <span><strong>{{ card.Hipotese ? "HD:" : "" }}</strong> {{ card.Hipotese }}</span>
-                        </div>
-                        <div class="card-row texto_medio">
-                            <span><strong>{{ card.Pendencia ? "Pendência:" : "" }}</strong> {{ card.Pendencia }}</span>
+                            <span><strong>{{ card.DIAGNOSTICO ? "Diagnóstico:" : "" }}</strong> {{ card.DIAGNOSTICO
+                                }}</span>
                         </div>
                     </div>
                     <div v-else>
                         <div class="leito_livre">
-                            <p><strong>{{ card.Leito }}</strong></p>
+                            <p><strong>{{ card.LEITO }}</strong></p>
                             <h1 style="color: green;">Livre</h1>
                         </div>
                     </div>
@@ -60,63 +62,54 @@
         </div>
     </div>
 
-    <div class="table-category" v-for="(cards, category) in sortedKanbanData" :key="category" v-if="tableView">
-        <div class="category-header">
-            <div :class="['table-title', categoryClass(category)]">{{ category }}</div>
-            <div class="kanban-cards table-view">
-                <div class="kanban-card table-row table-header-row">
-                    <div class="card-row texto-grande table-cell table-cell-header" style="width:100px">
-                        <span><strong>Leito</strong></span>
-                    </div>
-                    <div class="card-row texto-grande table-cell table-cell-header" style="width:130px">
-                        <span><strong>Dt.Admi</strong></span>
-                    </div>
-                    <div class="card-row texto-grande table-cell table-cell-header" style="width:100px">
-                        <span><strong>Hr.Admi</strong></span>
-                    </div>
-                    <div class="card-row texto-grande table-cell table-cell-header" style="width:220px">
-                        <span><strong>Paciente</strong></span>
-                    </div>
-                    <div class="card-row texto_medio table-cell table-cell-header" style="width:400px">
-                        <span><strong>H. Diagnóstica</strong></span>
-                    </div>
-                    <div class="card-row texto_medio table-cell table-cell-header" style="width:450px">
-                        <span><strong>Pendência</strong></span>
-                    </div>
-                    <div class="card-row texto-grande table-cell table-cell-header" style="width:60px">
-                        <span><strong>Hrs</strong></span>
-                    </div>
-                    <!-- <div class="card-row texto-grande table-cell table-cell-header" style="width:60px">
-                        <span><strong>Hrs AIH</strong></span>
-                    </div> -->
+    <div class="table-category" v-if="tableView && !loading && logged">
+
+        <div class="kanban-cards table-view">
+            <div class="kanban-card table-row table-header-row">
+                <div class="card-row texto-grande table-cell table-cell-header" style="width:80px">
+                    <span><strong>Leito</strong></span>
                 </div>
-                <div class="kanban-card table-row" v-for="(card, index) in cards" :key="index"
-                    :class="{ highlight_yellow: card.TotalHoras >= 20 && card.TotalHoras < 24, highlight_red: card.TotalHoras >= 24, highlight_green: card.AIHFeita === 'Sim' }">
-                    <div class="card-row texto-grande table-cell">
-                        <span><strong>{{ card.Leito }}</strong></span>
-                    </div>
-                    <div class="card-row texto-grande table-cell">
-                        <span>{{ card.DataAdmissao }}</span>
-                    </div>
-                    <div class="card-row texto-grande table-cell">
-                        <span>{{ card.HoraAdmissao.slice(0, -3) }}</span>
-                    </div>
-                    <div class="card-row texto-grande table-cell">
-                        <span>{{ card.Nome ? (nomeAbreviado(card.Nome) + (card.Idade ? ", " + card.Idade : "")) : ""
-                            }}</span>
-                    </div>
-                    <div class="card-row texto-grande table-cell">
-                        <span><strong>{{ card.Hipotese || "" }}</strong></span>
-                    </div>
-                    <div class="card-row texto-grande table-cell">
-                        <span><strong>{{ card.Pendencia || "" }}</strong></span>
-                    </div>
-                    <div class="card-row texto-grande table-cell" style="width:60px">
-                        <span> {{ card.TotalHoras || "0" }} </span>
-                    </div>
-                    <!-- <div class="card-row texto-grande table-cell" style="width:60px">
-                        <span> {{ card.HrsAIH || "0" }}</span>
-                    </div> -->
+                <div class="card-row texto-grande table-cell table-cell-header" style="width:110px">
+                    <span><strong>TL</strong></span>
+                </div>
+                <div class="card-row texto-grande table-cell table-cell-header" style="width:160px">
+                    <span><strong>Paciente</strong></span>
+                </div>
+                <div class="card-row texto-grande table-cell table-cell-header" style="width:100px">
+                    <span><strong>DI</strong></span>
+                </div>
+                <div class="card-row texto-grande table-cell table-cell-header" style="width:200px">
+                    <span><strong>ESPEC.</strong></span>
+                </div>
+                <div class="card-row texto_medio table-cell table-cell-header" style="width:100px">
+                    <span><strong>Banho</strong></span>
+                </div>
+                <div class="card-row texto_medio table-cell table-cell-header" style="width:450px">
+                    <span><strong>Diagnóstico</strong></span>
+                </div>
+            </div>
+            <div class="kanban-card table-row" v-for="(card, index) in filteredKanbanData" :key="index">
+                <div class="card-row texto-grande table-cell">
+                    <span><strong>{{ card.LEITO }}</strong></span>
+                </div>
+                <div class="card-row texto-grande table-cell">
+                    <span><strong>{{ card.TL }}</strong></span>
+                </div>
+                <div class="card-row texto-grande table-cell">
+                    <span>{{ card.NOME ? (nomeAbreviado(card.NOME) + (card.ID ? ", " + card.ID : "")) : ""
+                        }}</span>
+                </div>
+                <div class="card-row texto-grande table-cell">
+                    <span>{{ card.DI }}</span>
+                </div>
+                <div class="card-row texto-grande table-cell">
+                    <span><strong>{{ card.ESPEC || "" }}</strong></span>
+                </div>
+                <div class="card-row texto-grande table-cell">
+                    <span><strong>{{ card.BANHO || "" }}</strong></span>
+                </div>
+                <div class="card-row texto-grande table-cell" style="width:60px">
+                    <span> {{ card.DIAGNOSTICO || " " }} </span>
                 </div>
             </div>
         </div>
@@ -138,7 +131,14 @@ export default {
         };
     },
     computed: {
+        filteredKanbanData() {
+            console.log(this.kanbanData)
+            return Object.values(this.kanbanData).filter((card) => card.NOME);
+        },
+    },
+    methods: {
         async tentarLogin() {
+            console.log(this); // Veja o que está sendo exibido no console
             this.logging = true;
             try {
                 const response = await fetch("http://" + window.location.hostname + ":8000/authenticate/", {
@@ -147,7 +147,7 @@ export default {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ "input_password": this.input_password, "unidade": "observacao" }),
+                    body: JSON.stringify({ "input_password": this.input_password, "unidade": "internacao" }),
                 });
                 const data = await response.json();
 
@@ -164,38 +164,11 @@ export default {
             }
             this.logging = false;
         },
-        sortedKanbanData() {
-            const sortedData = {};
-            for (const [category, cards] of Object.entries(this.kanbanData)) {
-                sortedData[category] = cards.sort((a, b) => {
-                    const leitoA = parseInt(a.Leito.match(/\d+/) || 999);
-                    const leitoB = parseInt(b.Leito.match(/\d+/) || 999);
-                    return leitoA - leitoB;
-                });
-            }
-            return sortedData;
-        },
-        categoryClass() {
-            return (category) => {
-                switch (category) {
-                    case 'MASCULINO':
-                        return 'category-masculino';
-                    case 'FEMININO':
-                        return 'category-feminino';
-                    case 'INFANTIL':
-                        return 'category-infantil';
-                    default:
-                        return '';
-                }
-            };
-        }
-    },
-    methods: {
         async updateKanbanData() {
             if (this.logged) {
                 this.loading = true;
                 try {
-                    const response = await fetch("http://" + window.location.hostname + ":8000/kanban-data/observacao", {
+                    const response = await fetch("http://" + window.location.hostname + ":8000/kanban-data/internacao", {
                         headers: {
                             "password": this.input_password
                         }
@@ -328,24 +301,6 @@ export default {
     white-space: nowrap;
     /* Ensure the title is displayed vertically on the side */
     margin-right: 10px;
-}
-
-.category-masculino {
-    background-color: rgb(65, 65, 243);
-    color: white;
-    font-size: 26px;
-}
-
-.category-feminino {
-    background-color: rgb(134, 33, 33);
-    color: white;
-    font-size: 26px;
-}
-
-.category-infantil {
-    background-color: #4caf50;
-    color: white;
-    font-size: 26px;
 }
 
 .kanban-cards {

@@ -1,5 +1,5 @@
 <template>
-    <KanbanBoard />
+    <router-view />
 </template>
 
 <script>
