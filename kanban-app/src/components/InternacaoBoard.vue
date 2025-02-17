@@ -23,7 +23,7 @@
     <div class="kanban-category" v-if="!tableView && !loading && logged">
         <div class="category-header">
             <div class="kanban-cards">
-                <div class="kanban-card" v-for="(card, index) in kanbanData" :key="index"
+                <div class="kanban-card" v-for="(card, index) in paginatedKanbanData" :key="index"
                     :class="{ highlight_yellow: card.ESPEC === 'CC', highlight_purpple: card.ESPEC === 'PED', highlight_green: card.ESPEC === 'Ort', highlight_orange: card.ESPEC === 'CM', highlight_blue: card.ESPEC === 'OTO' }">
                     <div v-if="card.NOME">
                         <div class="card-row texto-grande">
@@ -36,7 +36,7 @@
                             <span>{{ card.NOME || "" }}</span>
                         </div>
                         <div class="card-row texto-grande">
-                            <span><strong>DI:</strong> {{ card.DI }}</span>
+                            <span><strong>DI: {{ card.DI }}</strong></span>
                         </div>
                         <div class="card-row texto-grande">
                             <span>{{ card.ESPEC ? nomeAbreviado(card.ESPEC) : ""
@@ -59,6 +59,10 @@
                 </div>
             </div>
         </div>
+        <div class="carousel-controls">
+            <button @click="prevPage">Anterior</button>
+            <button @click="nextPage">Próximo</button>
+        </div>
     </div>
 
     <div class="table-category" v-if="tableView && !loading && logged">
@@ -80,14 +84,14 @@
                 <div class="card-row texto-grande table-cell table-cell-header" style="width:200px">
                     <span><strong>ESPEC.</strong></span>
                 </div>
-                <div class="card-row texto_medio table-cell table-cell-header" style="width:100px">
+                <div class="card-row texto-grande table-cell table-cell-header" style="width:100px">
                     <span><strong>Banho</strong></span>
                 </div>
-                <div class="card-row texto_medio table-cell table-cell-header" style="width:450px">
+                <div class="card-row texto-grande table-cell table-cell-header" style="width:450px">
                     <span><strong>Diagnóstico</strong></span>
                 </div>
             </div>
-            <div class="kanban-card table-row" v-for="(card, index) in filteredKanbanData" :key="index"
+            <div class="kanban-card table-row" v-for="(card, index) in paginatedKanbanData" :key="index"
                 :class="{ highlight_yellow: card.ESPEC === 'CC', highlight_purpple: card.ESPEC === 'PED', highlight_green: card.ESPEC === 'Ort', highlight_orange: card.ESPEC === 'CM', highlight_blue: card.ESPEC === 'OTO' }">
                 <div class="card-row texto-grande table-cell">
                     <span><strong>{{ card.LEITO }}</strong></span>
@@ -113,6 +117,10 @@
                 </div>
             </div>
         </div>
+        <div class="carousel-controls">
+            <button @click="prevPage">Anterior</button>
+            <button @click="nextPage">Próximo</button>
+        </div>
     </div>
 </template>
 
@@ -128,12 +136,18 @@ export default {
             loading: false,
             error: "",
             input_password: "",
+            currentPage: 0,
+            itemsPerPage: 15,
         };
     },
     computed: {
         filteredKanbanData() {
-            console.log(this.kanbanData)
             return Object.values(this.kanbanData).filter((card) => card.NOME);
+        },
+        paginatedKanbanData() {
+            const start = this.currentPage * this.itemsPerPage;
+            const end = start + this.itemsPerPage;
+            return this.filteredKanbanData.slice(start, end);
         },
     },
     methods: {
@@ -208,13 +222,30 @@ export default {
                 result += " "
             })
             return result.slice(0, -1)
-        }
+        },
+        nextPage() {
+            if (this.currentPage < Math.ceil(this.filteredKanbanData.length / this.itemsPerPage) - 1) {
+                this.currentPage++;
+            } else {
+                this.currentPage = 0;
+            }
+        },
+        prevPage() {
+            if (this.currentPage > 0) {
+                this.currentPage--;
+            } else {
+                this.currentPage = Math.ceil(this.filteredKanbanData.length / this.itemsPerPage) - 1;
+            }
+        },
     },
     async mounted() {
         setInterval(() => {
             this.updateKanbanData()
         }, 60000);
 
+        setInterval(() => {
+            this.nextPage();
+        }, 10000);
     },
 };
 </script>
@@ -244,8 +275,8 @@ export default {
 
 .kanban-category {
     display: flex;
-    flex-direction: row;
-    align-items: flex-start;
+    flex-direction: column;
+    align-items: center;
     margin-bottom: 12px;
     background-color: #fff;
     border: 1px solid #ddd;
@@ -256,7 +287,7 @@ export default {
 
 .table-category {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: flex-start;
     margin-bottom: 12px;
     background-color: #fff;
@@ -304,10 +335,10 @@ export default {
 }
 
 .kanban-cards {
-    display: flex;
-    flex-wrap: nowrap;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(3, auto);
     gap: 10px;
-    overflow-x: hidden;
     width: 100%;
     padding-left: 10px;
 }
@@ -347,7 +378,7 @@ export default {
 
 .kanban-card.highlight_blue {
     border-color: #6eb3e0;
-    background-color: #c6ecff;
+    background-color: #d4e2ff;
 }
 
 .card-row {
@@ -473,5 +504,23 @@ export default {
 
 .table-header-row {
     background-color: #f2f2f2;
+}
+
+.carousel-controls {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.carousel-controls button {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    font-size: 16px;
+    margin: 0 5px;
+    cursor: pointer;
+    border-radius: 8px;
 }
 </style>

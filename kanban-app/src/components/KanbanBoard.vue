@@ -46,7 +46,8 @@
                             <span><strong>{{ card.Hipotese ? "HD:" : "" }}</strong> {{ card.Hipotese }}</span>
                         </div>
                         <div class="card-row texto_medio">
-                            <span><strong>{{ card.Pendencia ? "Pendência:" : "" }}</strong> {{ card.Pendencia }}</span>
+                            <span><strong>{{ card.Pendencia ? "Pendência:" : "" }}</strong></span> <span>{{
+                                card.Pendencia }}</span>
                         </div>
                     </div>
                     <div v-else>
