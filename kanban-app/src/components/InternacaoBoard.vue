@@ -20,106 +20,100 @@
     <h2 v-if="loading && Object.keys(kanbanData).length === 0" style="color: black">Carregando...</h2>
 
 
-    <div class="kanban-category" v-for="(cards, category) in sortedKanbanData" :key="category" v-if="!tableView">
+    <div class="kanban-category" v-if="!tableView && !loading && logged">
         <div class="category-header">
-            <div :class="['category-title', categoryClass(category)]">{{ category }}</div>
             <div class="kanban-cards">
-                <div class="kanban-card" v-for="(card, index) in cards" :key="index"
-                    :class="{ highlight_yellow: card.TotalHoras >= 20 && card.TotalHoras < 24, highlight_red: card.TotalHoras >= 24, highlight_green: card.AIHFeita === 'Sim' }">
-                    <div v-if="card.Nome">
+                <div class="kanban-card" v-for="(card, index) in paginatedKanbanData" :key="index"
+                    :class="{ highlight_yellow: card.ESPEC === 'CC', highlight_purpple: card.ESPEC === 'PED', highlight_green: card.ESPEC === 'Ort', highlight_orange: card.ESPEC === 'CM', highlight_blue: card.ESPEC === 'OTO' }">
+                    <div v-if="card.NOME">
                         <div class="card-row texto-grande">
-                            <span><strong>{{ card.Leito }}</strong></span>
+                            <span><strong>{{ card.LEITO }} {{ card.TL }}</strong></span>
                         </div>
                         <div class="card-row texto-grande">
-                            <span>{{ card.Nome ? (nomeAbreviado(card.Nome) + (card.Idade ? ", " + card.Idade : "")) : ""
+                            <span>{{ card.NOME || "" }}, {{ card.ID }}</span>
+                        </div>
+                        <div class="card-row texto-grande">
+                            <span>DI: {{ card.DI }}<strong> - {{ card.ESPEC ? nomeAbreviado(card.ESPEC) : ""
+                                    }}</strong></span>
+                        </div>
+                        <div class="card-row texto-grande">
+                            <span><strong>Banho:</strong> {{ card.BANHO || "" }}</span>
+                        </div>
+                        <div class="card-row texto_medio">
+                            <span><strong>{{ card.DIAGNOSTICO ? "Diagnóstico:" : "" }}</strong> {{ card.DIAGNOSTICO
                                 }}</span>
-                        </div>
-                        <div class="card-row texto-grande">
-                            <span><strong>Admissão:</strong> {{ card.DataAdmissao + ", " +
-                                card.HoraAdmissao.slice(0, -3) }}</span>
-                        </div>
-                        <div class="card-row texto-grande">
-                            <span><strong>Horas Totais:</strong> {{ card.TotalHoras || "0" }}</span>
-                        </div>
-
-                        <div class="card-row texto_medio">
-                            <span><strong>{{ card.Hipotese ? "HD:" : "" }}</strong> {{ card.Hipotese }}</span>
-                        </div>
-                        <div class="card-row texto_medio">
-                            <span><strong>{{ card.Pendencia ? "Pendência:" : "" }}</strong></span> <span>{{
-                                card.Pendencia }}</span>
                         </div>
                     </div>
                     <div v-else>
                         <div class="leito_livre">
-                            <p><strong>{{ card.Leito }}</strong></p>
+                            <p><strong>{{ card.LEITO }}</strong></p>
                             <h1 style="color: green;">Livre</h1>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="carousel-controls">
+            <button @click="prevPage">Anterior</button>
+            <button @click="nextPage">Próximo</button>
+        </div>
     </div>
 
-    <div class="table-category" v-for="(cards, category) in sortedKanbanData" :key="category" v-if="tableView">
-        <div class="category-header">
-            <div :class="['table-title', categoryClass(category)]">{{ category }}</div>
-            <div class="kanban-cards table-view">
-                <div class="kanban-card table-row table-header-row">
-                    <div class="card-row texto-grande table-cell table-cell-header" style="width:100px">
-                        <span><strong>Leito</strong></span>
-                    </div>
-                    <div class="card-row texto-grande table-cell table-cell-header" style="width:130px">
-                        <span><strong>Dt.Admi</strong></span>
-                    </div>
-                    <div class="card-row texto-grande table-cell table-cell-header" style="width:100px">
-                        <span><strong>Hr.Admi</strong></span>
-                    </div>
-                    <div class="card-row texto-grande table-cell table-cell-header" style="width:220px">
-                        <span><strong>Paciente</strong></span>
-                    </div>
-                    <div class="card-row texto_medio table-cell table-cell-header" style="width:400px">
-                        <span><strong>H. Diagnóstica</strong></span>
-                    </div>
-                    <div class="card-row texto_medio table-cell table-cell-header" style="width:450px">
-                        <span><strong>Pendência</strong></span>
-                    </div>
-                    <div class="card-row texto-grande table-cell table-cell-header" style="width:60px">
-                        <span><strong>Hrs</strong></span>
-                    </div>
-                    <!-- <div class="card-row texto-grande table-cell table-cell-header" style="width:60px">
-                        <span><strong>Hrs AIH</strong></span>
-                    </div> -->
+    <div class="table-category" v-if="tableView && !loading && logged">
+
+        <div class="kanban-cards table-view">
+            <div class="kanban-card table-row table-header-row">
+                <div class="card-row texto-grande table-cell table-cell-header" style="width:100px">
+                    <span><strong>Leito</strong></span>
                 </div>
-                <div class="kanban-card table-row" v-for="(card, index) in cards" :key="index"
-                    :class="{ highlight_yellow: card.TotalHoras >= 20 && card.TotalHoras < 24, highlight_red: card.TotalHoras >= 24, highlight_green: card.AIHFeita === 'Sim' }">
-                    <div class="card-row texto-grande table-cell">
-                        <span><strong>{{ card.Leito }}</strong></span>
-                    </div>
-                    <div class="card-row texto-grande table-cell">
-                        <span>{{ card.DataAdmissao }}</span>
-                    </div>
-                    <div class="card-row texto-grande table-cell">
-                        <span>{{ card.HoraAdmissao.slice(0, -3) }}</span>
-                    </div>
-                    <div class="card-row texto-grande table-cell">
-                        <span>{{ card.Nome ? (nomeAbreviado(card.Nome) + (card.Idade ? ", " + card.Idade : "")) : ""
-                            }}</span>
-                    </div>
-                    <div class="card-row texto-grande table-cell">
-                        <span><strong>{{ card.Hipotese || "" }}</strong></span>
-                    </div>
-                    <div class="card-row texto-grande table-cell">
-                        <span><strong>{{ card.Pendencia || "" }}</strong></span>
-                    </div>
-                    <div class="card-row texto-grande table-cell" style="width:60px">
-                        <span> {{ card.TotalHoras || "0" }} </span>
-                    </div>
-                    <!-- <div class="card-row texto-grande table-cell" style="width:60px">
-                        <span> {{ card.HrsAIH || "0" }}</span>
-                    </div> -->
+                <div class="card-row texto-grande table-cell table-cell-header" style="width:135px">
+                    <span><strong>TL</strong></span>
+                </div>
+                <div class="card-row texto-grande table-cell table-cell-header" style="width:210px">
+                    <span><strong>Paciente</strong></span>
+                </div>
+                <div class="card-row texto-grande table-cell table-cell-header" style="width:110px">
+                    <span><strong>DI</strong></span>
+                </div>
+                <div class="card-row texto-grande table-cell table-cell-header" style="width:110px">
+                    <span><strong>ESPEC.</strong></span>
+                </div>
+                <div class="card-row texto-grande table-cell table-cell-header" style="width:110px">
+                    <span><strong>Banho</strong></span>
+                </div>
+                <div class="card-row texto-grande table-cell table-cell-header" style="width:450px">
+                    <span><strong>Diagnóstico</strong></span>
                 </div>
             </div>
+            <div class="kanban-card table-row" v-for="(card, index) in paginatedKanbanData" :key="index"
+                :class="{ highlight_yellow: card.ESPEC === 'CC', highlight_purpple: card.ESPEC === 'PED', highlight_green: card.ESPEC === 'Ort', highlight_orange: card.ESPEC === 'CM', highlight_blue: card.ESPEC === 'OTO' }">
+                <div class="card-row texto-grande table-cell">
+                    <span><strong>{{ card.LEITO }}</strong></span>
+                </div>
+                <div class="card-row texto-grande table-cell">
+                    <span><strong>{{ card.TL }}</strong></span>
+                </div>
+                <div class="card-row texto-grande table-cell">
+                    <span>{{ card.NOME ? (nomeAbreviado(card.NOME) + (card.ID ? ", " + card.ID : "")) : ""
+                        }}</span>
+                </div>
+                <div class="card-row texto-grande table-cell">
+                    <span>{{ card.DI }}</span>
+                </div>
+                <div class="card-row texto-grande table-cell">
+                    <span><strong>{{ card.ESPEC || "" }}</strong></span>
+                </div>
+                <div class="card-row texto-grande table-cell">
+                    <span><strong>{{ card.BANHO || "" }}</strong></span>
+                </div>
+                <div class="card-row texto-grande table-cell" style="width:60px">
+                    <span> {{ card.DIAGNOSTICO || " " }} </span>
+                </div>
+            </div>
+        </div>
+        <div class="carousel-controls">
+            <button @click="prevPage">Anterior</button>
+            <button @click="nextPage">Próximo</button>
         </div>
     </div>
 </template>
@@ -136,10 +130,24 @@ export default {
             loading: false,
             error: "",
             input_password: "",
+            currentPage: 0,
+            itemsPerPage: 15,
+            firstLoad: true,
         };
     },
     computed: {
+        filteredKanbanData() {
+            return Object.values(this.kanbanData).filter((card) => card.NOME);
+        },
+        paginatedKanbanData() {
+            const start = this.currentPage * this.itemsPerPage;
+            const end = start + this.itemsPerPage;
+            return this.filteredKanbanData.slice(start, end);
+        },
+    },
+    methods: {
         async tentarLogin() {
+            console.log(this); // Veja o que está sendo exibido no console
             this.logging = true;
             try {
                 const response = await fetch("http://" + window.location.hostname + ":8000/authenticate/", {
@@ -148,7 +156,7 @@ export default {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ "input_password": this.input_password, "unidade": "observacao" }),
+                    body: JSON.stringify({ "input_password": this.input_password, "unidade": "internacao" }),
                 });
                 const data = await response.json();
 
@@ -165,65 +173,44 @@ export default {
             }
             this.logging = false;
         },
-        sortedKanbanData() {
-            const sortedData = {};
-            for (const [category, cards] of Object.entries(this.kanbanData)) {
-                sortedData[category] = cards.sort((a, b) => {
-                    const leitoA = parseInt(a.Leito.match(/\d+/) || 999);
-                    const leitoB = parseInt(b.Leito.match(/\d+/) || 999);
-                    return leitoA - leitoB;
-                });
-            }
-            return sortedData;
-        },
-        categoryClass() {
-            return (category) => {
-                switch (category) {
-                    case 'MASCULINO':
-                        return 'category-masculino';
-                    case 'FEMININO':
-                        return 'category-feminino';
-                    case 'INFANTIL':
-                        return 'category-infantil';
-                    default:
-                        return '';
-                }
-            };
-        }
-    },
-    methods: {
         async updateKanbanData() {
             if (this.logged) {
-                this.loading = true;
-                try {
-                    const response = await fetch("http://" + window.location.hostname + ":8000/kanban-data/observacao", {
-                        headers: {
-                            "password": this.input_password
+                if (this.firstLoad) {
+                    this.loading = true;
+                    this.firstLoad = false;
+                    try {
+                        const response = await fetch("http://" + window.location.hostname + ":8000/kanban-data/internacao", {
+                            headers: {
+                                "password": this.input_password
+                            }
+                        });
+                        const data = await response.json();
+                        console.log("Dados recebidos:", data);
+                        if (data["status"] == "error") {
+                            this.logged = false;
+                            this.error = "O login expirou; favor realizar login novamente."
+                            this.kanbanData = {}
+                            this.input_password = ""
+                            this.firstLoad = true;
+                        } else if ("error" in data) {
+                            this.logged = false;
+                            this.error = "Um erro inesperado ocorreu; entre em contato com os desenvolvedores."
+                            this.kanbanData = {}
+                            this.input_password = ""
+                            this.firstLoad = true;
+                        } else {
+                            this.kanbanData = data;
                         }
-                    });
-                    const data = await response.json();
-                    console.log("Dados recebidos:", data);
-                    if (data["status"] == "error") {
-                        this.logged = false;
-                        this.error = "O login expirou; favor realizar login novamente."
-                        this.kanbanData = {}
-                        this.input_password = ""
-                    } else if ("error" in data) {
+                    } catch (error) {
+                        console.error("Erro ao buscar dados:", error);
                         this.logged = false;
                         this.error = "Um erro inesperado ocorreu; entre em contato com os desenvolvedores."
                         this.kanbanData = {}
                         this.input_password = ""
-                    } else {
-                        this.kanbanData = data;
+                        this.firstLoad = true;
+                    } finally {
+                        this.loading = false;
                     }
-                } catch (error) {
-                    console.error("Erro ao buscar dados:", error);
-                    this.logged = false;
-                    this.error = "Um erro inesperado ocorreu; entre em contato com os desenvolvedores."
-                    this.kanbanData = {}
-                    this.input_password = ""
-                } finally {
-                    this.loading = false;
                 }
             }
         },
@@ -236,13 +223,30 @@ export default {
                 result += " "
             })
             return result.slice(0, -1)
-        }
+        },
+        nextPage() {
+            if (this.currentPage < Math.ceil(this.filteredKanbanData.length / this.itemsPerPage) - 1) {
+                this.currentPage++;
+            } else {
+                this.currentPage = 0;
+            }
+        },
+        prevPage() {
+            if (this.currentPage > 0) {
+                this.currentPage--;
+            } else {
+                this.currentPage = Math.ceil(this.filteredKanbanData.length / this.itemsPerPage) - 1;
+            }
+        },
     },
     async mounted() {
         setInterval(() => {
             this.updateKanbanData()
         }, 60000);
 
+        setInterval(() => {
+            this.nextPage();
+        }, 10000);
     },
 };
 </script>
@@ -272,8 +276,8 @@ export default {
 
 .kanban-category {
     display: flex;
-    flex-direction: row;
-    align-items: flex-start;
+    flex-direction: column;
+    align-items: center;
     margin-bottom: 12px;
     background-color: #fff;
     border: 1px solid #ddd;
@@ -284,7 +288,7 @@ export default {
 
 .table-category {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: flex-start;
     margin-bottom: 12px;
     background-color: #fff;
@@ -331,31 +335,13 @@ export default {
     margin-right: 10px;
 }
 
-.category-masculino {
-    background-color: rgb(65, 65, 243);
-    color: white;
-    font-size: 26px;
-}
-
-.category-feminino {
-    background-color: rgb(134, 33, 33);
-    color: white;
-    font-size: 26px;
-}
-
-.category-infantil {
-    background-color: #4caf50;
-    color: white;
-    font-size: 26px;
-}
-
 .kanban-cards {
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 10px;
-    overflow-x: hidden;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(3, auto);
+    gap: 18px;
     width: 100%;
-    padding-left: 10px;
+    padding: 10px;
 }
 
 .kanban-card {
@@ -371,19 +357,29 @@ export default {
     border: 1px solid #ddd;
 }
 
-.kanban-card.highlight_red {
-    border-color: #ff0000;
-    background-color: #ffe6e6;
+.kanban-card.highlight_purpple {
+    border-color: #966396;
+    background-color: #f7d5ff;
 }
 
 .kanban-card.highlight_yellow {
     border-color: #ffee00;
-    background-color: #ffffe6;
+    background-color: #ffffd9;
 }
 
 .kanban-card.highlight_green {
     border-color: #00ff00;
-    background-color: #e9ffe6;
+    background-color: #e4ffe0;
+}
+
+.kanban-card.highlight_orange {
+    border-color: #e28f4b;
+    background-color: #ffd6bf;
+}
+
+.kanban-card.highlight_blue {
+    border-color: #6eb3e0;
+    background-color: #d4e2ff;
 }
 
 .card-row {
@@ -509,5 +505,23 @@ export default {
 
 .table-header-row {
     background-color: #f2f2f2;
+}
+
+.carousel-controls {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.carousel-controls button {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    font-size: 16px;
+    margin: 0 5px;
+    cursor: pointer;
+    border-radius: 8px;
 }
 </style>
