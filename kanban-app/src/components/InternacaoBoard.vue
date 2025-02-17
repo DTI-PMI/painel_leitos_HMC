@@ -27,20 +27,14 @@
                     :class="{ highlight_yellow: card.ESPEC === 'CC', highlight_purpple: card.ESPEC === 'PED', highlight_green: card.ESPEC === 'Ort', highlight_orange: card.ESPEC === 'CM', highlight_blue: card.ESPEC === 'OTO' }">
                     <div v-if="card.NOME">
                         <div class="card-row texto-grande">
-                            <span><strong>{{ card.LEITO }}</strong></span>
+                            <span><strong>{{ card.LEITO }} {{ card.TL }}</strong></span>
                         </div>
                         <div class="card-row texto-grande">
-                            <span><strong>{{ card.TL }}</strong></span>
+                            <span>{{ card.NOME || "" }}, {{ card.ID }}</span>
                         </div>
                         <div class="card-row texto-grande">
-                            <span>{{ card.NOME || "" }}</span>
-                        </div>
-                        <div class="card-row texto-grande">
-                            <span><strong>DI: {{ card.DI }}</strong></span>
-                        </div>
-                        <div class="card-row texto-grande">
-                            <span>{{ card.ESPEC ? nomeAbreviado(card.ESPEC) : ""
-                                }}</span>
+                            <span>DI: {{ card.DI }}<strong> - {{ card.ESPEC ? nomeAbreviado(card.ESPEC) : ""
+                                    }}</strong></span>
                         </div>
                         <div class="card-row texto-grande">
                             <span><strong>Banho:</strong> {{ card.BANHO || "" }}</span>
@@ -345,9 +339,9 @@ export default {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     grid-template-rows: repeat(3, auto);
-    gap: 10px;
+    gap: 18px;
     width: 100%;
-    padding-left: 10px;
+    padding: 10px;
 }
 
 .kanban-card {
