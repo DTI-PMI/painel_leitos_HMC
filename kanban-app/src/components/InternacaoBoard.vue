@@ -69,22 +69,22 @@
 
         <div class="kanban-cards table-view">
             <div class="kanban-card table-row table-header-row">
-                <div class="card-row texto-grande table-cell table-cell-header" style="width:80px">
+                <div class="card-row texto-grande table-cell table-cell-header" style="width:100px">
                     <span><strong>Leito</strong></span>
                 </div>
-                <div class="card-row texto-grande table-cell table-cell-header" style="width:110px">
+                <div class="card-row texto-grande table-cell table-cell-header" style="width:135px">
                     <span><strong>TL</strong></span>
                 </div>
-                <div class="card-row texto-grande table-cell table-cell-header" style="width:160px">
+                <div class="card-row texto-grande table-cell table-cell-header" style="width:210px">
                     <span><strong>Paciente</strong></span>
                 </div>
-                <div class="card-row texto-grande table-cell table-cell-header" style="width:100px">
+                <div class="card-row texto-grande table-cell table-cell-header" style="width:110px">
                     <span><strong>DI</strong></span>
                 </div>
-                <div class="card-row texto-grande table-cell table-cell-header" style="width:200px">
+                <div class="card-row texto-grande table-cell table-cell-header" style="width:110px">
                     <span><strong>ESPEC.</strong></span>
                 </div>
-                <div class="card-row texto-grande table-cell table-cell-header" style="width:100px">
+                <div class="card-row texto-grande table-cell table-cell-header" style="width:110px">
                     <span><strong>Banho</strong></span>
                 </div>
                 <div class="card-row texto-grande table-cell table-cell-header" style="width:450px">
@@ -138,6 +138,7 @@ export default {
             input_password: "",
             currentPage: 0,
             itemsPerPage: 15,
+            firstLoad: true,
         };
     },
     computed: {
@@ -180,36 +181,42 @@ export default {
         },
         async updateKanbanData() {
             if (this.logged) {
-                this.loading = true;
-                try {
-                    const response = await fetch("http://" + window.location.hostname + ":8000/kanban-data/internacao", {
-                        headers: {
-                            "password": this.input_password
+                if (this.firstLoad) {
+                    this.loading = true;
+                    this.firstLoad = false;
+                    try {
+                        const response = await fetch("http://" + window.location.hostname + ":8000/kanban-data/internacao", {
+                            headers: {
+                                "password": this.input_password
+                            }
+                        });
+                        const data = await response.json();
+                        console.log("Dados recebidos:", data);
+                        if (data["status"] == "error") {
+                            this.logged = false;
+                            this.error = "O login expirou; favor realizar login novamente."
+                            this.kanbanData = {}
+                            this.input_password = ""
+                            this.firstLoad = true;
+                        } else if ("error" in data) {
+                            this.logged = false;
+                            this.error = "Um erro inesperado ocorreu; entre em contato com os desenvolvedores."
+                            this.kanbanData = {}
+                            this.input_password = ""
+                            this.firstLoad = true;
+                        } else {
+                            this.kanbanData = data;
                         }
-                    });
-                    const data = await response.json();
-                    console.log("Dados recebidos:", data);
-                    if (data["status"] == "error") {
-                        this.logged = false;
-                        this.error = "O login expirou; favor realizar login novamente."
-                        this.kanbanData = {}
-                        this.input_password = ""
-                    } else if ("error" in data) {
+                    } catch (error) {
+                        console.error("Erro ao buscar dados:", error);
                         this.logged = false;
                         this.error = "Um erro inesperado ocorreu; entre em contato com os desenvolvedores."
                         this.kanbanData = {}
                         this.input_password = ""
-                    } else {
-                        this.kanbanData = data;
+                        this.firstLoad = true;
+                    } finally {
+                        this.loading = false;
                     }
-                } catch (error) {
-                    console.error("Erro ao buscar dados:", error);
-                    this.logged = false;
-                    this.error = "Um erro inesperado ocorreu; entre em contato com os desenvolvedores."
-                    this.kanbanData = {}
-                    this.input_password = ""
-                } finally {
-                    this.loading = false;
                 }
             }
         },
