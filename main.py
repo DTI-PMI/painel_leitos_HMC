@@ -133,9 +133,9 @@ async def get_kanban_data(
                 "DI": row.get("DI", " "),
                 "ID": row.get("ID", " "),
                 "TL": row.get("TL", " "),
-                "DIAGNOSTICO": row.get("DIAGNÓSTICO", " "),
+                "DIAGNOSTICO": row.get("DIAGNOSTICO", " "),
                 "LEITO": row.get("LEITO", " "),
-                "ESPEC": row.get("ESPEC.", " "),
+                "ESPEC": row.get("ESPEC", " "),
                 "BANHO": row.get("BANHO", " ")
             }
 

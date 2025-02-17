@@ -24,7 +24,7 @@
         <div class="category-header">
             <div class="kanban-cards">
                 <div class="kanban-card" v-for="(card, index) in kanbanData" :key="index"
-                    :class="{ highlight_yellow: card.TotalHoras >= 20 && card.TotalHoras < 24, highlight_red: card.TotalHoras >= 24, highlight_green: card.AIHFeita === 'Sim' }">
+                    :class="{ highlight_yellow: card.ESPEC === 'CC', highlight_purpple: card.ESPEC === 'PED', highlight_green: card.ESPEC === 'Ort', highlight_orange: card.ESPEC === 'CM', highlight_blue: card.ESPEC === 'OTO' }">
                     <div v-if="card.NOME">
                         <div class="card-row texto-grande">
                             <span><strong>{{ card.LEITO }}</strong></span>
@@ -45,7 +45,6 @@
                         <div class="card-row texto-grande">
                             <span><strong>Banho:</strong> {{ card.BANHO || "" }}</span>
                         </div>
-
                         <div class="card-row texto_medio">
                             <span><strong>{{ card.DIAGNOSTICO ? "Diagnóstico:" : "" }}</strong> {{ card.DIAGNOSTICO
                                 }}</span>
@@ -88,7 +87,8 @@
                     <span><strong>Diagnóstico</strong></span>
                 </div>
             </div>
-            <div class="kanban-card table-row" v-for="(card, index) in filteredKanbanData" :key="index">
+            <div class="kanban-card table-row" v-for="(card, index) in filteredKanbanData" :key="index"
+                :class="{ highlight_yellow: card.ESPEC === 'CC', highlight_purpple: card.ESPEC === 'PED', highlight_green: card.ESPEC === 'Ort', highlight_orange: card.ESPEC === 'CM', highlight_blue: card.ESPEC === 'OTO' }">
                 <div class="card-row texto-grande table-cell">
                     <span><strong>{{ card.LEITO }}</strong></span>
                 </div>
@@ -325,19 +325,29 @@ export default {
     border: 1px solid #ddd;
 }
 
-.kanban-card.highlight_red {
-    border-color: #ff0000;
-    background-color: #ffe6e6;
+.kanban-card.highlight_purpple {
+    border-color: #966396;
+    background-color: #f7d5ff;
 }
 
 .kanban-card.highlight_yellow {
     border-color: #ffee00;
-    background-color: #ffffe6;
+    background-color: #ffffd9;
 }
 
 .kanban-card.highlight_green {
     border-color: #00ff00;
-    background-color: #e9ffe6;
+    background-color: #e4ffe0;
+}
+
+.kanban-card.highlight_orange {
+    border-color: #e28f4b;
+    background-color: #ffd6bf;
+}
+
+.kanban-card.highlight_blue {
+    border-color: #6eb3e0;
+    background-color: #c6ecff;
 }
 
 .card-row {
