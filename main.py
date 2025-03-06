@@ -85,7 +85,6 @@ async def get_kanban_data(
                 "TotalHoras": row.get("Tempo de Perm.", "0"),
                 "NecessarioAIH": row.get("Necessário fazer AIH?", "Não"),
                 "AIHFeita": row.get("AIH Feita?", "Não")
-                # "HrsAIH": row.get("Hrs. AIH Feita", "0")
             }
 
             kanban_data[categoria].append(card)
@@ -109,13 +108,13 @@ async def get_kanban_data(
 
         expected_headers = [
             "LEITO",
-            "TL",
+            "TP",
             "DI",
             "NOME",
             "ID",
             "ESPEC",
             "DIAGNOSTICO",
-            "BANHO"
+            "PENDENCIAS"
         ]
 
         records = sheet.get_all_records(expected_headers=expected_headers)
@@ -127,15 +126,17 @@ async def get_kanban_data(
         kanban_data = []
 
         for _, row in df.iterrows():
+            if row.get("NOME", " ") == "INTERNAÇÃO - CENSO DIÁRIO":
+                continue
             card = {
                 "NOME": row.get("NOME", " "),
                 "DI": row.get("DI", " "),
                 "ID": row.get("ID", " "),
-                "TL": row.get("TL", " "),
+                "TP": row.get("TP", " "),
                 "DIAGNOSTICO": row.get("DIAGNOSTICO", " "),
                 "LEITO": row.get("LEITO", " "),
                 "ESPEC": row.get("ESPEC", " "),
-                "BANHO": row.get("BANHO", " ")
+                "PENDENCIAS": row.get("PENDENCIAS", " ")
             }
 
             kanban_data.append(card)

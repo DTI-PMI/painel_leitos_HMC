@@ -27,7 +27,7 @@
                     :class="{ highlight_yellow: card.ESPEC === 'CC', highlight_purpple: card.ESPEC === 'PED', highlight_green: card.ESPEC === 'Ort', highlight_orange: card.ESPEC === 'CM', highlight_blue: card.ESPEC === 'OTO' }">
                     <div v-if="card.NOME">
                         <div class="card-row texto-grande">
-                            <span><strong>{{ card.LEITO }} {{ card.TL }}</strong></span>
+                            <span><strong>{{ card.LEITO }} {{ card.TP }}</strong></span>
                         </div>
                         <div class="card-row texto-grande">
                             <span>{{ card.NOME || "" }}, {{ card.ID }}</span>
@@ -37,7 +37,7 @@
                                     }}</strong></span>
                         </div>
                         <div class="card-row texto-grande">
-                            <span><strong>Banho:</strong> {{ card.BANHO || "" }}</span>
+                            <span><strong>PENDÊNCIAS:</strong> {{ card.PENDENCIAS || "" }}</span>
                         </div>
                         <div class="card-row texto_medio">
                             <span><strong>{{ card.DIAGNOSTICO ? "Diagnóstico:" : "" }}</strong> {{ card.DIAGNOSTICO
@@ -67,7 +67,7 @@
                     <span><strong>Leito</strong></span>
                 </div>
                 <div class="card-row texto-grande table-cell table-cell-header" style="width:135px">
-                    <span><strong>TL</strong></span>
+                    <span><strong>TP</strong></span>
                 </div>
                 <div class="card-row texto-grande table-cell table-cell-header" style="width:210px">
                     <span><strong>Paciente</strong></span>
@@ -78,8 +78,8 @@
                 <div class="card-row texto-grande table-cell table-cell-header" style="width:110px">
                     <span><strong>ESPEC.</strong></span>
                 </div>
-                <div class="card-row texto-grande table-cell table-cell-header" style="width:110px">
-                    <span><strong>Banho</strong></span>
+                <div class="card-row texto-grande table-cell table-cell-header" style="width:380px">
+                    <span><strong>PENDÊNCIAS</strong></span>
                 </div>
                 <div class="card-row texto-grande table-cell table-cell-header" style="width:450px">
                     <span><strong>Diagnóstico</strong></span>
@@ -91,11 +91,10 @@
                     <span><strong>{{ card.LEITO }}</strong></span>
                 </div>
                 <div class="card-row texto-grande table-cell">
-                    <span><strong>{{ card.TL }}</strong></span>
+                    <span><strong>{{ card.TP }}</strong></span>
                 </div>
                 <div class="card-row texto-grande table-cell">
-                    <span>{{ card.NOME ? (nomeAbreviado(card.NOME) + (card.ID ? ", " + card.ID : "")) : ""
-                        }}</span>
+                    <span>{{ card.NOME ? (nomeAbreviado(card.NOME) + (card.ID ? ", " + card.ID : "")) : "" }}</span>
                 </div>
                 <div class="card-row texto-grande table-cell">
                     <span>{{ card.DI }}</span>
@@ -104,7 +103,7 @@
                     <span><strong>{{ card.ESPEC || "" }}</strong></span>
                 </div>
                 <div class="card-row texto-grande table-cell">
-                    <span><strong>{{ card.BANHO || "" }}</strong></span>
+                    <span><strong>{{ card.PENDENCIAS || "" }}</strong></span>
                 </div>
                 <div class="card-row texto-grande table-cell" style="width:60px">
                     <span> {{ card.DIAGNOSTICO || " " }} </span>
@@ -283,7 +282,7 @@ export default {
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 5px;
-    min-height: 26vh;
+    min-height: 28vh;
 }
 
 .table-category {
