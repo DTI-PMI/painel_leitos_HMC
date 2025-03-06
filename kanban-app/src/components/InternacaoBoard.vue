@@ -66,12 +66,13 @@
                 <div class="card-row texto-grande table-cell table-cell-header" style="width:100px">
                     <span><strong>Leito</strong></span>
                 </div>
-                <div class="card-row texto-grande table-cell table-cell-header" style="width:135px">
-                    <span><strong>TP</strong></span>
-                </div>
                 <div class="card-row texto-grande table-cell table-cell-header" style="width:210px">
                     <span><strong>Paciente</strong></span>
                 </div>
+                <div class="card-row texto-grande table-cell table-cell-header" style="width:135px">
+                    <span><strong>TP</strong></span>
+                </div>
+
                 <div class="card-row texto-grande table-cell table-cell-header" style="width:110px">
                     <span><strong>DI</strong></span>
                 </div>
@@ -91,10 +92,10 @@
                     <span><strong>{{ card.LEITO }}</strong></span>
                 </div>
                 <div class="card-row texto-grande table-cell">
-                    <span><strong>{{ card.TP }}</strong></span>
+                    <span>{{ card.NOME ? (nomeAbreviado(card.NOME) + (card.ID ? ", " + card.ID : "")) : "" }}</span>
                 </div>
                 <div class="card-row texto-grande table-cell">
-                    <span>{{ card.NOME ? (nomeAbreviado(card.NOME) + (card.ID ? ", " + card.ID : "")) : "" }}</span>
+                    <span><strong>{{ card.TP }}</strong></span>
                 </div>
                 <div class="card-row texto-grande table-cell">
                     <span>{{ card.DI }}</span>
