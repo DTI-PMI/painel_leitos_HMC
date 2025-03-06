@@ -1,4 +1,4 @@
-import { createWebHistory, createRouter } from 'vue-router'
+import { createWebHashHistory, createRouter } from 'vue-router'
 
 import KanbanBoard from '../components/KanbanBoard.vue'
 import InternacaoBoard from '../components/InternacaoBoard.vue'
@@ -9,7 +9,8 @@ const routes = [
 ]
 
 const router = createRouter({
-    history: createWebHistory(),
+    history: createWebHashHistory(`/painel-leitos-HMC`),
+    base: `/painel-leitos-HMC`,
     routes,
 })
 

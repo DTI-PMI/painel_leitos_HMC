@@ -150,7 +150,8 @@ export default {
             console.log(this); // Veja o que está sendo exibido no console
             this.logging = true;
             try {
-                const response = await fetch("http://" + window.location.hostname + ":8000/authenticate/", {
+                const port = window.location.protocol == "https:" ? "8443" : "8000"
+                const response = await fetch(window.location.protocol + "//" + window.location.hostname + ":" + port + "/authenticate/", {
                     method: "POST",
                     headers: {
                         'Accept': 'application/json',
@@ -179,7 +180,8 @@ export default {
                     this.loading = true;
                     this.firstLoad = false;
                     try {
-                        const response = await fetch("http://" + window.location.hostname + ":8000/kanban-data/internacao", {
+                        const port = window.location.protocol == "https:" ? "8443" : "8000"
+                        const response = await fetch(window.location.protocol + "//" + window.location.hostname + ":" + port + "/kanban-data/internacao", {
                             headers: {
                                 "password": this.input_password
                             }
