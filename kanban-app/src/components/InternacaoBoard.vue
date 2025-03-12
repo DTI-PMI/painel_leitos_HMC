@@ -248,7 +248,7 @@ export default {
 
         setInterval(() => {
             this.nextPage();
-        }, 10000);
+        }, 30000);
     },
 };
 </script>
