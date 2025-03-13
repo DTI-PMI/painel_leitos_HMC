@@ -14,13 +14,9 @@
         </form>
     </div>
 
-    <button @click="tableView = !tableView" class="button_change" v-if="logged && Object.keys(kanbanData).length > 0">
-        {{ tableView ? "Ver Cards" : "Ver Tabela" }}</button>
-
     <h2 v-if="loading && Object.keys(kanbanData).length === 0" style="color: black">Carregando...</h2>
 
-
-    <div class="kanban-category" v-if="!tableView && !loading && logged">
+    <div v-if="!tableView && !loading && logged">
         <div class="category-header">
             <div class="kanban-cards">
                 <div class="kanban-card" v-for="(card, index) in paginatedKanbanData" :key="index"
@@ -34,14 +30,14 @@
                         </div>
                         <div class="card-row texto-grande">
                             <span>DI: {{ card.DI }}<strong> - {{ card.ESPEC ? nomeAbreviado(card.ESPEC) : ""
-                                    }}</strong></span>
+                            }}</strong></span>
                         </div>
                         <div class="card-row texto-grande">
                             <span><strong>PENDÊNCIAS:</strong> {{ card.PENDENCIAS || "" }}</span>
                         </div>
                         <div class="card-row texto_medio">
                             <span><strong>{{ card.DIAGNOSTICO ? "Diagnóstico:" : "" }}</strong> {{ card.DIAGNOSTICO
-                                }}</span>
+                            }}</span>
                         </div>
                     </div>
                     <div v-else>
@@ -53,16 +49,12 @@
                 </div>
             </div>
         </div>
-        <div class="carousel-controls">
-            <button @click="prevPage">Anterior</button>
-            <button @click="nextPage">Próximo</button>
-        </div>
     </div>
 
     <div class="table-category" v-if="tableView && !loading && logged">
 
-        <div class="kanban-cards table-view">
-            <div class="kanban-card table-row table-header-row">
+        <div class="table-view">
+            <div class="table-row table-header-row">
                 <div class="card-row texto-grande table-cell table-cell-header" style="width:100px">
                     <span><strong>Leito</strong></span>
                 </div>
@@ -111,10 +103,13 @@
                 </div>
             </div>
         </div>
-        <div class="carousel-controls">
-            <button @click="prevPage">Anterior</button>
-            <button @click="nextPage">Próximo</button>
-        </div>
+    </div>
+    <div class="carousel-controls" v-if="logged && Object.keys(kanbanData).length > 0">
+        <button @click="prevPage">Anterior</button>
+        <button @click="nextPage">Próximo</button>
+        <button @click="tableView = !tableView">
+            {{ tableView ? "Ver Cards" : "Ver Tabela" }}
+        </button>
     </div>
 </template>
 
@@ -256,8 +251,7 @@ export default {
 <style scoped>
 #app {
     background-color: #f7f7f7;
-    padding: 10px;
-    height: 100vh;
+    height: 100%;
     overflow-x: hidden;
 }
 
@@ -284,7 +278,7 @@ export default {
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 8px;
-    padding: 5px;
+    padding: 15px;
     min-height: 28vh;
 }
 
@@ -333,7 +327,6 @@ export default {
     justify-content: center;
     height: auto;
     white-space: nowrap;
-    /* Ensure the title is displayed vertically on the side */
     margin-right: 10px;
 }
 
@@ -341,9 +334,9 @@ export default {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     grid-template-rows: repeat(3, auto);
-    gap: 18px;
+    gap: 25px 20px;
     width: 100%;
-    padding: 10px;
+    padding: 15px;
 }
 
 .kanban-card {
@@ -357,6 +350,7 @@ export default {
     flex-direction: column;
     gap: 8px;
     border: 1px solid #ddd;
+    min-height: 245px;
 }
 
 .kanban-card.highlight_purpple {
@@ -511,8 +505,11 @@ export default {
 
 .carousel-controls {
     display: flex;
+    margin-top: 10px;
     justify-content: center;
-    margin-top: 20px;
+    align-items: center;
+    gap: 5px;
+
 }
 
 .carousel-controls button {
