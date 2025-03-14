@@ -252,7 +252,6 @@ export default {
 #app {
     background-color: #f7f7f7;
     height: 100%;
-    overflow-x: hidden;
 }
 
 .button_change {

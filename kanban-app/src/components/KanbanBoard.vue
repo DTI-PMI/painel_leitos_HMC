@@ -254,7 +254,6 @@ export default {
     background-color: #f7f7f7;
     padding: 10px;
     height: 100vh;
-    overflow-x: hidden;
 }
 
 .button_change {
@@ -267,7 +266,7 @@ export default {
     margin: 4px 2px;
     cursor: pointer;
     border-radius: 8px;
-    position: absolute;
+    position: fixed;
     right: 10px;
     top: 10px;
 }
@@ -355,7 +354,6 @@ export default {
     display: flex;
     flex-wrap: nowrap;
     gap: 10px;
-    overflow-x: hidden;
     width: 100%;
     padding-left: 10px;
 }
