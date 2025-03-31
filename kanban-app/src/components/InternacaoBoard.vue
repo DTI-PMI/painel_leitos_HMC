@@ -174,40 +174,40 @@ export default {
                 if (this.firstLoad) {
                     this.loading = true;
                     this.firstLoad = false;
-                    try {
-                        const port = window.location.protocol == "https:" ? "2053" : "8000"
-                        const response = await fetch(window.location.protocol + "//" + window.location.hostname + ":" + port + "/kanban-data/internacao", {
-                            headers: {
-                                "password": this.input_password
-                            }
-                        });
-                        const data = await response.json();
-                        console.log("Dados recebidos:", data);
-                        if (data["status"] == "error") {
-                            this.logged = false;
-                            this.error = "O login expirou; favor realizar login novamente."
-                            this.kanbanData = {}
-                            this.input_password = ""
-                            this.firstLoad = true;
-                        } else if ("error" in data) {
-                            this.logged = false;
-                            this.error = "Um erro inesperado ocorreu; entre em contato com os desenvolvedores."
-                            this.kanbanData = {}
-                            this.input_password = ""
-                            this.firstLoad = true;
-                        } else {
-                            this.kanbanData = data;
+                }
+                try {
+                    const port = window.location.protocol == "https:" ? "2053" : "8000"
+                    const response = await fetch(window.location.protocol + "//" + window.location.hostname + ":" + port + "/kanban-data/internacao", {
+                        headers: {
+                            "password": this.input_password
                         }
-                    } catch (error) {
-                        console.error("Erro ao buscar dados:", error);
+                    });
+                    const data = await response.json();
+                    console.log("Dados recebidos:", data);
+                    if (data["status"] == "error") {
+                        this.logged = false;
+                        this.error = "O login expirou; favor realizar login novamente."
+                        this.kanbanData = {}
+                        this.input_password = ""
+                        this.firstLoad = true;
+                    } else if ("error" in data) {
                         this.logged = false;
                         this.error = "Um erro inesperado ocorreu; entre em contato com os desenvolvedores."
                         this.kanbanData = {}
                         this.input_password = ""
                         this.firstLoad = true;
-                    } finally {
-                        this.loading = false;
+                    } else {
+                        this.kanbanData = data;
                     }
+                } catch (error) {
+                    console.error("Erro ao buscar dados:", error);
+                    this.logged = false;
+                    this.error = "Um erro inesperado ocorreu; entre em contato com os desenvolvedores."
+                    this.kanbanData = {}
+                    this.input_password = ""
+                    this.firstLoad = true;
+                } finally {
+                    this.loading = false;
                 }
             }
         },
@@ -239,7 +239,7 @@ export default {
     async mounted() {
         setInterval(() => {
             this.updateKanbanData()
-        }, 60000);
+        }, 40000);
 
         setInterval(() => {
             this.nextPage();
