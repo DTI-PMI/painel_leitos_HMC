@@ -20,7 +20,7 @@
         <div class="category-header">
             <div class="kanban-cards">
                 <div class="kanban-card" v-for="(card, index) in paginatedKanbanData" :key="index"
-                    :class="{ highlight_yellow: card.ESPEC === 'CC', highlight_purpple: card.ESPEC === 'PED', highlight_green: card.ESPEC === 'Ort', highlight_orange: card.ESPEC === 'CM', highlight_blue: card.ESPEC === 'OTO' }">
+                    :class="{ highlight_yellow: card.ESPEC === 'CC', highlight_purpple: card.ESPEC === 'PED', highlight_green: card.ESPEC === 'ORT', highlight_orange: card.ESPEC === 'CM', highlight_blue: card.ESPEC === 'OTO', highlight_red: card.ESPEC === 'VASC', highlight_brown: card.ESPEC === 'BUCO', highlight_stblue: card.ESPEC === 'PSQ' }">
                     <div v-if="card.NOME">
                         <div class="card-row texto-grande">
                             <span><strong>{{ card.LEITO }} {{ card.TP }}</strong></span>
@@ -30,14 +30,14 @@
                         </div>
                         <div class="card-row texto-grande">
                             <span>DI: {{ card.DI }}<strong> - {{ card.ESPEC ? nomeAbreviado(card.ESPEC) : ""
-                            }}</strong></span>
+                                    }}</strong></span>
                         </div>
                         <div class="card-row texto-grande">
                             <span><strong>PENDÊNCIAS:</strong> {{ card.PENDENCIAS || "" }}</span>
                         </div>
                         <div class="card-row texto_medio">
                             <span><strong>{{ card.DIAGNOSTICO ? "Diagnóstico:" : "" }}</strong> {{ card.DIAGNOSTICO
-                            }}</span>
+                                }}</span>
                         </div>
                     </div>
                     <div v-else>
