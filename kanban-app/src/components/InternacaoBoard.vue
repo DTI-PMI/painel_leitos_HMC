@@ -79,7 +79,7 @@
                 </div>
             </div>
             <div class="kanban-card table-row" v-for="(card, index) in paginatedKanbanData" :key="index"
-                :class="{ highlight_yellow: card.ESPEC === 'CC', highlight_purpple: card.ESPEC === 'PED', highlight_green: card.ESPEC === 'Ort', highlight_orange: card.ESPEC === 'CM', highlight_blue: card.ESPEC === 'OTO' }">
+                :class="{ highlight_yellow: card.ESPEC === 'CC', highlight_purpple: card.ESPEC === 'PED', highlight_green: card.ESPEC === 'ORT', highlight_orange: card.ESPEC === 'CM', highlight_blue: card.ESPEC === 'OTO', highlight_red: card.ESPEC === 'VASC', highlight_brown: card.ESPEC === 'BUCO', highlight_stblue: card.ESPEC === 'PSQ' }">
                 <div class="card-row texto-grande table-cell">
                     <span><strong>{{ card.LEITO }}</strong></span>
                 </div>
@@ -375,6 +375,21 @@ export default {
 .kanban-card.highlight_blue {
     border-color: #6eb3e0;
     background-color: #d4e2ff;
+}
+
+.highlight_stblue {
+    border-color: #6eb3e0;
+    background-color: #d4e2ff;
+}
+
+.highlight_red {
+    border-color: #ff0000;
+    background-color: #ffcccc;
+}
+
+.highlight_brown {
+    border-color: #8B4513;
+    background-color: #D2B48C;
 }
 
 .card-row {
