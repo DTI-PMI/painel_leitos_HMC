@@ -127,7 +127,7 @@ async def get_kanban_data(
 
         for _, row in df.iterrows():
             if row.get("NOME", " ") == "INTERNAÇÃO - CENSO DIÁRIO":
-                continue
+                break
             card = {
                 "NOME": row.get("NOME", " "),
                 "DI": row.get("DI", " "),
