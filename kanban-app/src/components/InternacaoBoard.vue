@@ -145,7 +145,7 @@ export default {
             console.log(this); // Veja o que está sendo exibido no console
             this.logging = true;
             try {
-                const port = window.location.protocol == "https:" ? "2053" : "8000"
+                const port = window.location.protocol == "https:" ? "8443" : "8000"
                 const response = await fetch(window.location.protocol + "//" + window.location.hostname + ":" + port + "/authenticate/", {
                     method: "POST",
                     headers: {
@@ -176,7 +176,7 @@ export default {
                     this.firstLoad = false;
                 }
                 try {
-                    const port = window.location.protocol == "https:" ? "2053" : "8000"
+                    const port = window.location.protocol == "https:" ? "8443" : "8000"
                     const response = await fetch(window.location.protocol + "//" + window.location.hostname + ":" + port + "/kanban-data/internacao", {
                         headers: {
                             "password": this.input_password

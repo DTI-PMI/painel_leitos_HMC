@@ -142,7 +142,7 @@ export default {
         async tentarLogin() {
             this.logging = true;
             try {
-                const port = window.location.protocol == "https:" ? "2053" : "8000"
+                const port = window.location.protocol == "https:" ? "8443" : "8000"
                 const response = await fetch(window.location.protocol + "//" + window.location.hostname + ":" + port + "/authenticate/", {
                     method: "POST",
                     headers: {
@@ -197,7 +197,7 @@ export default {
             if (this.logged) {
                 this.loading = true;
                 try {
-                    const port = window.location.protocol == "https:" ? "2053" : "8000"
+                    const port = window.location.protocol == "https:" ? "8443" : "8000"
                     const response = await fetch(window.location.protocol + "//" + window.location.hostname + ":" + port + "/kanban-data/observacao", {
                         headers: {
                             "password": this.input_password
