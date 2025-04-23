@@ -142,8 +142,8 @@ export default {
         async tentarLogin() {
             this.logging = true;
             try {
-                const port = window.location.protocol == "https:" ? "8443" : "8000"
-                const response = await fetch(window.location.protocol + "//" + window.location.hostname + ":" + port + "/authenticate/", {
+                const url = window.location.protocol == "https:" ? "https://leitos-api.ilhabela.sp.gov.br" : window.location.protocol + "//" + window.location.hostname + ":8000"
+                const response = await fetch(url + "/authenticate/", {
                     method: "POST",
                     headers: {
                         'Accept': 'application/json',
@@ -197,8 +197,8 @@ export default {
             if (this.logged) {
                 this.loading = true;
                 try {
-                    const port = window.location.protocol == "https:" ? "8443" : "8000"
-                    const response = await fetch(window.location.protocol + "//" + window.location.hostname + ":" + port + "/kanban-data/observacao", {
+                    const url = window.location.protocol == "https:" ? "https://leitos-api.ilhabela.sp.gov.br" : window.location.protocol + "//" + window.location.hostname + ":8000"
+                    const response = await fetch(url + "/kanban-data/observacao", {
                         headers: {
                             "password": this.input_password
                         }
