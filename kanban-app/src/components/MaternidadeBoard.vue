@@ -22,6 +22,14 @@
         </form>
     </div>
 
+    <button
+        @click="tableView = !tableView"
+        class="button_change"
+        v-if="logged && Object.keys(kanbanData).length > 0"
+    >
+        {{ tableView ? "Ver Cards" : "Ver Tabela" }}
+    </button>
+
     <h2
         v-if="loading && Object.keys(kanbanData).length === 0"
         style="color: black"
@@ -34,62 +42,66 @@
             <div class="kanban-cards">
                 <div
                     class="kanban-card"
-                    v-for="(card, index) in paginatedKanbanData"
+                    v-for="(card, index) in sortedKanbanData"
                     :key="index"
-                    :class="{
-                        highlight_yellow: card.ESPEC === 'CC',
-                        highlight_purpple: card.ESPEC === 'PED',
-                        highlight_green: card.ESPEC === 'ORT',
-                        highlight_orange: card.ESPEC === 'CM',
-                        highlight_blue: card.ESPEC === 'OTO',
-                        highlight_red: card.ESPEC === 'VASC',
-                        highlight_brown: card.ESPEC === 'BUCO',
-                        highlight_stblue: card.ESPEC === 'PSQ',
-                    }"
                 >
                     <div v-if="card.NOME">
                         <div class="card-row texto-grande">
                             <span
                                 ><strong
-                                    >{{ card.LEITO }} {{ card.TP }}</strong
-                                ></span
-                            >
-                        </div>
-                        <div class="card-row texto-grande">
-                            <span>{{ card.NOME || "" }}, {{ card.ID }}</span>
-                        </div>
-                        <div class="card-row texto-grande">
-                            <span
-                                >DI: {{ card.DI
-                                }}<strong>
-                                    -
-                                    {{
-                                        card.ESPEC
-                                            ? nomeAbreviado(card.ESPEC)
-                                            : ""
-                                    }}</strong
+                                    >{{ getEnfermariaName(card.ENFERMARIA) }} —
+                                    LEITO {{ card.LEITO }}</strong
                                 ></span
                             >
                         </div>
                         <div class="card-row texto-grande">
                             <span
-                                ><strong>PENDÊNCIAS:</strong>
-                                {{ card.PENDENCIAS || "" }}</span
+                                >{{ card.NOME.trim() || ""
+                                }}{{
+                                    card.IDADE ? ", " + card.IDADE : ""
+                                }}</span
+                            >
+                        </div>
+                        <div class="card-row texto_medio">
+                            <span
+                                ><strong>ABO:</strong>
+                                {{ card.ABO || "" }}</span
+                            >
+                        </div>
+                        <div class="card-row texto_medio">
+                            <span
+                                ><strong>DIETA:</strong>
+                                {{ card.DIETA || "" }}</span
+                            >
+                        </div>
+                        <div class="card-row texto_medio">
+                            <span
+                                ><strong>ALERGIAS:</strong>
+                                {{ card.ALERGIAS || "" }}</span
                             >
                         </div>
                         <div class="card-row texto_medio">
                             <span
                                 ><strong>{{
-                                    card.DIAGNOSTICO ? "Diagnóstico:" : ""
+                                    card.DIAGNOSTICO ? "DIAGNÓSTICO:" : ""
                                 }}</strong>
                                 {{ card.DIAGNOSTICO }}</span
+                            >
+                        </div>
+                        <div class="card-row texto_medio">
+                            <span
+                                ><strong>PROGRAMAÇÕES:</strong>
+                                {{ card.PROGRAMACOES || "" }}</span
                             >
                         </div>
                     </div>
                     <div v-else>
                         <div class="leito_livre">
                             <p>
-                                <strong>{{ card.LEITO }}</strong>
+                                <strong
+                                    >{{ getEnfermariaName(card.ENFERMARIA) }} —
+                                    LEITO {{ card.LEITO }}</strong
+                                >
                             </p>
                             <h1 style="color: green">Livre</h1>
                         </div>
@@ -98,10 +110,15 @@
             </div>
         </div>
     </div>
-
     <div class="table-category" v-if="tableView && !loading && logged">
         <div class="table-view">
             <div class="table-row table-header-row">
+                <div
+                    class="card-row texto-grande table-cell table-cell-header"
+                    style="width: 100px"
+                >
+                    <span><strong>Enf.</strong></span>
+                </div>
                 <div
                     class="card-row texto-grande table-cell table-cell-header"
                     style="width: 100px"
@@ -116,28 +133,28 @@
                 </div>
                 <div
                     class="card-row texto-grande table-cell table-cell-header"
-                    style="width: 135px"
+                    style="width: 110px"
                 >
-                    <span><strong>TP</strong></span>
+                    <span><strong>ABO</strong></span>
                 </div>
 
                 <div
                     class="card-row texto-grande table-cell table-cell-header"
-                    style="width: 110px"
+                    style="width: 135px"
                 >
-                    <span><strong>DI</strong></span>
+                    <span><strong>Dieta</strong></span>
                 </div>
                 <div
                     class="card-row texto-grande table-cell table-cell-header"
-                    style="width: 110px"
+                    style="width: 135px"
                 >
-                    <span><strong>ESPEC.</strong></span>
+                    <span><strong>Alergias</strong></span>
                 </div>
                 <div
                     class="card-row texto-grande table-cell table-cell-header"
                     style="width: 380px"
                 >
-                    <span><strong>PENDÊNCIAS</strong></span>
+                    <span><strong>Programações</strong></span>
                 </div>
                 <div
                     class="card-row texto-grande table-cell table-cell-header"
@@ -148,19 +165,19 @@
             </div>
             <div
                 class="kanban-card table-row"
-                v-for="(card, index) in paginatedKanbanData"
+                v-for="(card, index) in kanbanData"
                 :key="index"
-                :class="{
-                    highlight_yellow: card.ESPEC === 'CC',
-                    highlight_purpple: card.ESPEC === 'PED',
-                    highlight_green: card.ESPEC === 'ORT',
-                    highlight_orange: card.ESPEC === 'CM',
-                    highlight_blue: card.ESPEC === 'OTO',
-                    highlight_red: card.ESPEC === 'VASC',
-                    highlight_brown: card.ESPEC === 'BUCO',
-                    highlight_stblue: card.ESPEC === 'PSQ',
-                }"
             >
+                <div class="card-row texto-grande table-cell">
+                    <span
+                        ><strong>{{
+                            card.ENFERMARIA.replace(
+                                "OBSERVAÇÃO",
+                                "OBS.",
+                            ).replace("Z|", "")
+                        }}</strong></span
+                    >
+                </div>
                 <div class="card-row texto-grande table-cell">
                     <span
                         ><strong>{{ card.LEITO }}</strong></span
@@ -170,52 +187,32 @@
                     <span>{{
                         card.NOME
                             ? nomeAbreviado(card.NOME) +
-                              (card.ID ? ", " + card.ID : "")
+                              (card.IDADE ? ", " + card.IDADE : "")
                             : ""
                     }}</span>
                 </div>
                 <div class="card-row texto-grande table-cell">
-                    <span
-                        ><strong>{{ card.TP }}</strong></span
-                    >
+                    <span>{{ card.ABO }}</span>
                 </div>
                 <div class="card-row texto-grande table-cell">
-                    <span>{{ card.DI }}</span>
+                    <span>{{ card.DIETA }}</span>
                 </div>
                 <div class="card-row texto-grande table-cell">
-                    <span
-                        ><strong>{{ card.ESPEC || "" }}</strong></span
-                    >
+                    <span>{{ card.ALERGIAS }}</span>
                 </div>
                 <div class="card-row texto-grande table-cell">
-                    <span
-                        ><strong>{{ card.PENDENCIAS || "" }}</strong></span
-                    >
+                    <span>{{ card.PROGRAMACOES }}</span>
                 </div>
-                <div
-                    class="card-row texto-grande table-cell"
-                    style="width: 60px"
-                >
-                    <span> {{ card.DIAGNOSTICO || " " }} </span>
+                <div class="card-row texto-grande table-cell">
+                    <span>{{ card.DIAGNOSTICO || " " }}</span>
                 </div>
             </div>
         </div>
     </div>
-    <div
-        class="carousel-controls"
-        v-if="logged && Object.keys(kanbanData).length > 0"
-    >
-        <button @click="prevPage">Anterior</button>
-        <button @click="nextPage">Próximo</button>
-        <button @click="tableView = !tableView">
-            {{ tableView ? "Ver Cards" : "Ver Tabela" }}
-        </button>
-    </div>
 </template>
-
 <script>
 export default {
-    name: "InternacaoView",
+    name: "MaternidadeView",
     data() {
         return {
             tableView: false,
@@ -231,18 +228,14 @@ export default {
         };
     },
     computed: {
-        filteredKanbanData() {
-            return Object.values(this.kanbanData).filter((card) => card.NOME);
-        },
-        paginatedKanbanData() {
-            const start = this.currentPage * this.itemsPerPage;
-            const end = start + this.itemsPerPage;
-            return this.filteredKanbanData.slice(start, end);
+        sortedKanbanData() {
+            return this.kanbanData.sort((a, b) =>
+                a.ENFERMARIA.localeCompare(b.ENFERMARIA),
+            );
         },
     },
     methods: {
         async tentarLogin() {
-            console.log(this); // Veja o que está sendo exibido no console
             this.logging = true;
             try {
                 const url =
@@ -260,7 +253,7 @@ export default {
                     },
                     body: JSON.stringify({
                         input_password: this.input_password,
-                        unidade: "internacao",
+                        unidade: "maternidade",
                     }),
                 });
                 const data = await response.json();
@@ -294,7 +287,7 @@ export default {
                               window.location.hostname +
                               ":8000";
                     const response = await fetch(
-                        url + "/kanban-data/internacao",
+                        url + "/kanban-data/maternidade",
                         {
                             headers: {
                                 password: this.input_password,
@@ -344,25 +337,12 @@ export default {
             });
             return result.slice(0, -1);
         },
-        nextPage() {
-            if (
-                this.currentPage <
-                Math.ceil(this.filteredKanbanData.length / this.itemsPerPage) -
-                    1
-            ) {
-                this.currentPage++;
-            } else {
-                this.currentPage = 0;
-            }
-        },
-        prevPage() {
-            if (this.currentPage > 0) {
-                this.currentPage--;
-            } else {
-                this.currentPage =
-                    Math.ceil(
-                        this.filteredKanbanData.length / this.itemsPerPage,
-                    ) - 1;
+        getEnfermariaName(enf) {
+            try {
+                if (Number.isInteger(Number(enf))) return "ENF. " + enf;
+                return enf.replace("Z|", "");
+            } catch {
+                return enf.replace("Z|", "");
             }
         },
     },
@@ -370,14 +350,9 @@ export default {
         setInterval(() => {
             this.updateKanbanData();
         }, 40000);
-
-        setInterval(() => {
-            this.nextPage();
-        }, 30000);
     },
 };
 </script>
-
 <style scoped>
 #app {
     background-color: #f7f7f7;
@@ -461,7 +436,7 @@ export default {
 
 .kanban-cards {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(3, auto);
     gap: 25px 20px;
     width: 100%;
@@ -473,13 +448,13 @@ export default {
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 10px;
-    width: 320px;
+    width: 410px;
     flex: 0 0 auto;
     display: flex;
     flex-direction: column;
     gap: 8px;
     border: 1px solid #ddd;
-    min-height: 245px;
+    min-height: 255px;
 }
 
 .kanban-card.highlight_purpple {

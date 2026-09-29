@@ -28,7 +28,7 @@ async def authenticate(request: Request):
 
 
 @app.get("/kanban-data/observacao")
-async def get_kanban_data(
+async def get_kanban_data_obs(
     request: Request,
 ):
     if (request.headers.get('password') != config["observacao"]['password']):
@@ -97,7 +97,7 @@ async def get_kanban_data(
 
 
 @app.get("/kanban-data/internacao")
-async def get_kanban_data(
+async def get_kanban_data_int(
     request: Request,
 ):
     if (request.headers.get('password') != config["internacao"]['password']):
@@ -143,6 +143,61 @@ async def get_kanban_data(
 
         return kanban_data
 
+    except Exception as e:
+        traceback.print_exc()
+        return {"error": traceback.format_exc()}
+
+@app.get("/kanban-data/maternidade")
+async def get_kanban_data_int(
+    request: Request,
+):
+    if (request.headers.get('password') != config["maternidade"]['password']):
+        return {"status": "error"}
+    try:
+
+        sheet = gc.open_by_key(config["maternidade"]['sheet']).sheet1
+
+        expected_headers = [
+            "ENFERMARIA",
+            "LEITO",
+            "NOME COMPLETO",
+            "IDADE",
+            "ABO",
+            "DIETA",
+            "ALERGIAS",
+            "HIPÓTESE DIAGNÓSTICA",
+            "PROGRAMAÇÕES"
+        ]
+
+        records = sheet.get_all_records(expected_headers=expected_headers)
+
+        df = pd.DataFrame(records)
+
+        df = df[expected_headers]  # Mantendo apenas os campos esperados
+
+        kanban_data = []
+
+        i = 1
+        for _, row in df.iterrows():
+            enfermaria = row.get("ENFERMARIA", " ")
+            if enfermaria == "ENFERMARIA":
+                enfermaria = i
+                i = i + 1
+            card = {
+                "ENFERMARIA": str(enfermaria).replace('\n',' ').replace('ENFERMARIA ','Z|'),
+                "LEITO": row.get("LEITO", " "),
+                "NOME": row.get("NOME COMPLETO", " "),
+                "IDADE": row.get("IDADE", " "),
+                "ABO": row.get("ABO", " "),
+                "DIETA": row.get("DIETA", " "),
+                "ALERGIAS": row.get("ALERGIAS", " "),
+                "DIAGNOSTICO": row.get("HIPÓTESE DIAGNÓSTICA", " "),
+                "PROGRAMACOES": row.get("PROGRAMAÇÕES", " ")
+            }
+
+            kanban_data.append(card)
+
+        return kanban_data
     except Exception as e:
         traceback.print_exc()
         return {"error": traceback.format_exc()}
